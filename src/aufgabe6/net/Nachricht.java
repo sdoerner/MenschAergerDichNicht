@@ -1,5 +1,7 @@
 package aufgabe6.net;
 
+import java.util.TreeMap;
+
 /**
  * Abstrakte Basisklasse fuer alle Nachrichten, d.h. Inhalte von gesendeten
  * Paketen.
@@ -7,12 +9,16 @@ package aufgabe6.net;
  * @author sdoerner
  * 
  */
-public abstract class Nachricht
+public class Nachricht
 {
 
-    String sender;
-
-    String empfaenger;
+    public static enum KEYS
+    {
+        SPIELER_NAME
+    }
+    private String sender;
+    private String empfaenger;
+    private TreeMap<KEYS, String> data;
 
     public Nachricht(String sender, String empfaenger)
     {
@@ -29,6 +35,16 @@ public abstract class Nachricht
     {
         return empfaenger;
     }
+    
+    public String getValue(KEYS key)
+    {
+        return data.get(key);
+    }
+    
+    public void setValue(KEYS key, String value)
+    {
+        data.put(key, value);
+    }
 
     /**
      * Diese Methode gibt die serialisierte Form der Nachricht zurueck, die
@@ -36,5 +52,5 @@ public abstract class Nachricht
      * 
      * @return Das serialisierte Objekt als String
      */
-    public abstract String getSerialization();
+    public String getSerialization(){return null;}
 }
