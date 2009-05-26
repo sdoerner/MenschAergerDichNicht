@@ -87,4 +87,8 @@ public class Spielfeld {
 	public int wuerfeln() {
 		return (int)(Math.random() * 6) + 1;
 	}
+	
+	public Vector<Figur> getWahrscheinlichFiguren(){
+		return this.felder;
+	}
 }

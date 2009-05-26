@@ -6,17 +6,18 @@ package aufgabe6;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
-import java.awt.TextField;
+import java.awt.Point;
+import java.awt.RenderingHints;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
@@ -60,7 +61,7 @@ public class Gui implements GuiInterface {
 	
 	private JTextPane spielNachrichten = null;
 	
-	private Spielfeld spielfeld = null;
+	private GuiSpielfeld spielfeld = null;
 
 	private JPanel spielfeldContainer = null;
 	
@@ -104,7 +105,7 @@ public class Gui implements GuiInterface {
 		
 		this.spielfeldContainer  = new JPanel();
 		
-		this.spielfeld = new Spielfeld();
+		this.spielfeld = new GuiSpielfeld();
 		
 		spielfeldContainer.add(this.spielfeld);
 		
@@ -180,8 +181,7 @@ public class Gui implements GuiInterface {
 	public void starteGui() {
 		this.fenster.pack();
 		this.passeSpielfeldAn();
-		this.fenster.setVisible(true);
-	}
+		this.fenster.setVisible(true);	}
 
 	private void passeSpielfeldAn() {
 		int groesse = Math.min(this.spielfeldContainer.getWidth(), this.spielfeldContainer.getHeight());
@@ -190,17 +190,122 @@ public class Gui implements GuiInterface {
 	}
 	
 	@SuppressWarnings({ "serial" })
-	private class Spielfeld extends JPanel{
-		public Spielfeld(){
+	private class GuiSpielfeld extends JPanel{
+		private byte [][] feld = null;
+		private Point[] figurenPositionen = null;
+		private int[] figurenImHaus = null;
+		
+		public GuiSpielfeld(){
 			this.setBackground(Color.WHITE);
+			
+			this.feld = new byte[][] { 
+					{ 2, 2, 0, 0, 1, 1, 3, 0, 0, 3, 3 },
+					{ 2, 2, 0, 0, 1, 3, 1, 0, 0, 3, 3 },
+					{ 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 1, 3, 1, 0, 0, 0, 0 },
+					{ 2, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1 },
+					{ 1, 2, 2, 2, 2, 0, 4, 4, 4, 4, 1 },
+					{ 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 4 },
+					{ 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0 },
+					{ 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0 },
+					{ 5, 5, 0, 0, 1, 5, 1, 0, 0, 4, 4 },
+					{ 5, 5, 0, 0, 5, 1, 1, 0, 0, 4, 4 } };
+			
+			this.figurenPositionen = new Point[]{
+					new Point(4,0),new Point(4,1),new Point(4,2),new Point(4,3),new Point(4,4),new Point(3,4),
+					new Point(2,4),new Point(1,4),new Point(0,4),new Point(0,5),new Point(0,6),new Point(1,6),
+					new Point(2,6),new Point(3,6),new Point(4,6),new Point(4,7),new Point(4,8),new Point(4,9),
+					new Point(4,10),new Point(5,10),new Point(6,10),new Point(6,9),new Point(6,8),new Point(6,7),
+					new Point(6,6),new Point(7,6),new Point(8,6),new Point(9,6),new Point(10,6),new Point(10,5),
+					new Point(10,4),new Point(9,4),new Point(8,4),new Point(7,4),new Point(6,4),new Point(6,3),
+					new Point(6,2),new Point(6,1),new Point(6,0),new Point(5,0)
+			};
+			
+			this.figurenImHaus = new int[]{ 0,0,0,0 };
 		}
 		
-		public void zeichneLeeresFeld(Color fuellFarbe){
-			
+		protected void paintComponent(Graphics g){
+			super.paintComponent(g);
+			int laenge = this.getWidth()/11;
+			Graphics2D g2 = (Graphics2D)g;
+			Color tmpColor = g2.getColor();
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			for(int i = 0; i< this.feld.length;i++){
+				for(int j = 0; j < feld[i].length; j++){
+					Color currentColor= berechneFarbe(feld[i][j]);
+					if(currentColor == null) continue;
+					g2.setColor(currentColor);
+					g2.fillOval(j*laenge+2, i*laenge+laenge/10, laenge-laenge/5, laenge-laenge/5);
+					g2.setColor(Color.BLACK);
+					g2.drawOval(j*laenge+2, i*laenge+laenge/10, laenge-laenge/5, laenge-laenge/5);			
+				}
+			}
+			for(Figur f: Spielfeld.getInstance().getWahrscheinlichFiguren()){
+				if(f!=null){
+					Color currentColor = berechneFarbe(f.getBesitzer().getSpielernummer()+2);
+					g2.setColor(currentColor.darker().darker());
+					Point position = berechnePosition(f,laenge);
+					g2.fillOval(position.x, position.y, laenge-laenge/16, laenge-laenge/16);
+					g2.setColor(currentColor.darker());
+					g2.fillOval(position.x, position.y, laenge-laenge/32, laenge-laenge/32);
+				}
+			}
+			g2.setColor(tmpColor);	
 		}
-		
-		public void zeichneSpielfeld(){
-			
+
+		private Point berechnePosition(Figur f, int laenge) {
+			Point position = new Point();
+			if(f.istInZiel() || f.getPosition() == -1){
+				position.x = this.figurenPositionen[f.getPosition()].y;
+				position.y = this.figurenPositionen[f.getPosition()].x;
+			}else{
+				switch(f.getBesitzer().getSpielernummer()){
+				case 0:
+					position.x = 0;
+					position.y = 0;
+					break;
+				case 1:
+					position.x = 9;
+					position.y = 0;
+					break;
+				case 2:
+					position.x = 0;
+					position.y = 9;
+					break;
+				case 3:
+					position.x = 9;
+					position.y = 9;
+					break;
+				default:
+					return null;
+				}
+			}
+			return null;
+		}
+
+		private Color berechneFarbe(int i) {
+			Color currentColor = null;
+			switch(i){
+			case 0:
+				break;
+			case 2:
+				currentColor = Color.GREEN;
+				break;
+			case 3:
+				currentColor = Color.RED;
+				break;
+			case 4:
+				currentColor = Color.BLUE;
+				break;
+			case 5:
+				currentColor = Color.YELLOW;
+				break;
+			case 1:
+			default:
+				currentColor = Color.WHITE;
+				break;
+			}
+			return currentColor;
 		}
 	}
 	
