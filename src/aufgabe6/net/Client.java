@@ -3,7 +3,10 @@ package aufgabe6.net;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.UnknownHostException;
 
 public class Client {
@@ -23,7 +26,9 @@ public class Client {
     public void verbinde(String theIP) {
     	Socket so;
 		try {
-			so = new Socket(theIP, port);
+			InetSocketAddress inet = new InetSocketAddress(theIP, port);
+			so = new Socket();
+			so.connect(inet);
 			initialisiereKommunikationsThread(so);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();

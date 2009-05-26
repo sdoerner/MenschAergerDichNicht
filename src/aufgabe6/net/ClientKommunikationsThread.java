@@ -6,16 +6,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 import aufgabe6.net.Nachricht.KEYS;
 
 public class ClientKommunikationsThread implements Runnable
 {
     private Socket socket;
-    private ObjectInputStream input;
+    private InputStream input;
     private ObjectOutputStream output;
-    private Scanner scan;
     private boolean abbrechen;
     
     /**
@@ -26,11 +24,11 @@ public class ClientKommunikationsThread implements Runnable
         this.abbrechen = false;
         this.socket = socket;
         try {
-	        input = (ObjectInputStream)this.socket.getInputStream();
-	        output =(ObjectOutputStream)this.socket.getOutputStream();
-	        scan = new Scanner(input);
+	        input = this.socket.getInputStream();
+	        output = new ObjectOutputStream(this.socket.getOutputStream());
         } catch (Exception e) {
-            System.err.println("Konnte auf dem Server einen Kommunikationsthread nicht starten");
+            System.err.println("Konnte auf dem Client einen Kommunikationsthread nicht starten");
+            e.printStackTrace();
         }
         Nachricht n = new Nachricht("Client1", "Server");
         n.setValue(KEYS.SPIELER_NAME, "Spieler1");
@@ -44,9 +42,10 @@ public class ClientKommunikationsThread implements Runnable
     public void run() {
         while (!this.abbrechen) {
             try {
-                if (scan.hasNextLine()) {
-                    Nachricht newNachricht = (Nachricht)input.readObject();
-                    System.out.println(newNachricht.getValue(Nachricht.KEYS.SPIELER_NAME));
+                if (input.available() > 0) {
+                	ObjectInputStream ois = new ObjectInputStream(input);
+                    Nachricht newNachricht = (Nachricht)ois.readObject();
+                    System.out.println(newNachricht.getEmpfaenger());
                 }
             } catch (Exception e) {
                 System.err.println("Fehler beim Lesen einer Nachricht");
@@ -62,6 +61,7 @@ public class ClientKommunikationsThread implements Runnable
     public void sendNachricht(Nachricht theNachricht) {
         try {
         	output.writeObject(theNachricht);
+        	output.flush();
         } catch (IOException e) {
             System.err.println("Nachricht konnte nicht gesendet werden");
         }

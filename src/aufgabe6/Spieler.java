@@ -12,16 +12,18 @@ public class Spieler {
 	private int einstiegspunkt = -1;
 	private int spielerNummer = -1;
 	private String name = null;
+	private boolean isNetwork = false;
 	
 	/**
 	 * Konstruktur, der den Einstiegspunkt setzt und die Figuren initialisiert
 	 * @param spielerNummer die Nummer des Spielers (zwischen 0 und 3)
 	 */
-	public Spieler(String name, int spielerNummer) {
+	public Spieler(String name, int spielerNummer, boolean isNetwork) {
 		this.einstiegspunkt = spielerNummer * 10;
 		this.name = name;
 		this.spielerNummer = spielerNummer;
 		this.figuren = new Vector<Figur>(4);
+		this.isNetwork = isNetwork;
 		
 		for (int i = 0; i < 4; i++)
 			this.figuren.add(new Figur(this));
