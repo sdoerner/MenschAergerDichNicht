@@ -24,6 +24,10 @@ public class MenschMain {
      * @param args
      */
     public static void main(String[] args) {
+    	Server s = new Server(9999);
+        s.lausche();
+        System.out.println("test");
+    	
         spieler = new Vector<Spieler>(4);
         verbindeSpieler("Sascha");
         
@@ -51,10 +55,6 @@ public class MenschMain {
 	        		break;
 	        	}
         	}
-        	
-        	Server s = new Server(9999);
-            s.lausche();
-            System.out.println("test");
         }
     }
 
