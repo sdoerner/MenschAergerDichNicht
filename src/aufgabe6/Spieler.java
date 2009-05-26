@@ -92,4 +92,16 @@ public class Spieler {
 		
 		return false;
 	}
+
+	/**
+	 * holt eine Figur auf die Startposition
+	 */
+	public void kommRaus() {
+		for (Figur itFig : figuren) {
+			if (itFig.getPosition() == -1) {
+				itFig.aufStart();
+				break;
+			}
+		}
+	}
 }

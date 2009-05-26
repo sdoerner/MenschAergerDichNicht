@@ -67,4 +67,8 @@ public class Figur {
 	public boolean istInZiel() {
 		return this.position > 39;
 	}
+
+	public void aufStart() {
+		this.position = this.besitzer.getEinstiegspunkt();
+	}
 }
