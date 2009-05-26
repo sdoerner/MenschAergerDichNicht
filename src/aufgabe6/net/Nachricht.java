@@ -1,5 +1,6 @@
 package aufgabe6.net;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
 /**
@@ -9,8 +10,9 @@ import java.util.TreeMap;
  * @author sdoerner
  * 
  */
-public class Nachricht
+public class Nachricht implements Serializable
 {
+    private static final long serialVersionUID = -6825244032568593070L;
 
     public static enum KEYS
     {
@@ -20,10 +22,13 @@ public class Nachricht
     private String empfaenger;
     private TreeMap<KEYS, String> data;
 
-    public Nachricht(String sender, String empfaenger)
+    public Nachricht(String sender, String empfaenger) throws NullPointerException
     {
+        if (sender==null || empfaenger==null)
+            throw new NullPointerException();
         this.sender = sender;
         this.empfaenger = empfaenger;
+        data = new TreeMap<KEYS, String>();
     }
 
     public String getSender()
@@ -45,12 +50,4 @@ public class Nachricht
     {
         data.put(key, value);
     }
-
-    /**
-     * Diese Methode gibt die serialisierte Form der Nachricht zurueck, die
-     * ueber das Netz gesendet werden kann.
-     * 
-     * @return Das serialisierte Objekt als String
-     */
-    public String getSerialization(){return null;}
 }

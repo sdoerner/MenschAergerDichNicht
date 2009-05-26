@@ -2,9 +2,12 @@ package aufgabe6.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Scanner;
+
+import aufgabe6.net.Nachricht.KEYS;
 
 public class ServerKommunikationsThread implements Runnable
 {
@@ -44,7 +47,13 @@ public class ServerKommunikationsThread implements Runnable
                 {
                     s = sc.nextLine();
                     if (s.compareTo("antworte")==0)
+                    {
+                        Nachricht n = new Nachricht("meinsender", "meinempfaenger");
+                        n.setValue(KEYS.SPIELER_NAME, "Sebastian Vettel");
+                        sendeNachricht(n);
                         this.sendString("meine Antwort");
+                    }
+
                     System.out.println(s);
                 }
             } catch (Exception e)
@@ -52,6 +61,17 @@ public class ServerKommunikationsThread implements Runnable
                 System.err.println("exp");
                 e.printStackTrace();
             }
+        }
+    }
+    
+    public void sendeNachricht(Nachricht n)
+    {
+        try{
+        ObjectOutputStream oos = new ObjectOutputStream(os);
+        oos.writeObject(n);
+        }
+        catch (IOException e){
+            System.err.println("Fehler beim Senden der Nachricht.");
         }
     }
     
