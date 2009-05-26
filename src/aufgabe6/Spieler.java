@@ -94,7 +94,7 @@ public class Spieler {
 	}
 
 	/**
-	 * holt eine Figur auf die Startposition
+	 * holt die erste Figur, die noch außerhalb des Spielfelds steht, auf das Spielfeld
 	 */
 	public void kommRaus() {
 		for (Figur itFig : figuren) {

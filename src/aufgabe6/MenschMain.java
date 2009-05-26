@@ -45,7 +45,7 @@ public class MenschMain {
         		aktuellerSpieler = itSpieler;
         		
         		if (!itSpieler.istDraussen()) {
-        			for (int i = 0; i < 3; i++) {
+        			for (int i = 0; i < 3; i++) {			// drei mal wuerfeln, um evt. raus zu kommen
         				int gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
         				
         				if (gewuerfelteZahl == 6) {
