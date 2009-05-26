@@ -8,7 +8,7 @@ public class MenschMain {
 	private static Spieler aktuellerSpieler = null;
 
 	/**
-	 * wuerfelt und laesst den aktuellen Spieler ziehen (bei gewuerfelter 6 Wiederholung)
+	 * wuerfelt und laesst den aktuellen Spieler ziehen (bei gewuerfelter 6: Wiederholung)
 	 */
 	private static void wuerfelnUndZiehen() {
 		int gewuerfelteZahl;
@@ -44,6 +44,7 @@ public class MenschMain {
         				int gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
         				
         				if (gewuerfelteZahl == 6) {
+        					itSpieler.kommRaus();
         					itSpieler.ziehe(6);
         					wuerfelnUndZiehen();
         					break;

@@ -39,13 +39,13 @@ public class Spielfeld {
 	public boolean istZugGueltig(Spieler spieler, int startPosition, int anzahlSchritte) {
 		byte anzahlFelder = 40;
 		int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
-				
-		if (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel()) {
+		
+		if (felder.size() > startPosition && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {
 				endPosition = anzahlFelder - 1 + (spieler.getSpielernummer() * 4) + anzahlSchritte;
 				anzahlFelder += 16;
 		}
 
-		if ((startPosition >= 0) && (startPosition < anzahlFelder) && (endPosition < anzahlFelder) && (anzahlSchritte > 0) && (anzahlSchritte <= 6) &&		// liegen Start- und Endfeld auf dem Spielfeld und ist die Wuerfelzahl zwischen 1 und 6?
+		if (felder.size() > startPosition && (startPosition >= 0) && (startPosition < anzahlFelder) && (endPosition < anzahlFelder) && (anzahlSchritte > 0) && (anzahlSchritte <= 6) &&		// liegen Start- und Endfeld auf dem Spielfeld und ist die Wuerfelzahl zwischen 1 und 6?
 				(felder.get(startPosition) != null && felder.get(startPosition).getBesitzer().equals(spieler) && (felder.get(endPosition) == null || !felder.get(endPosition).getBesitzer().equals(spieler))))		// gibt es auf dem Startfeld eine Spielfigur, gehoert sie dem Spieler, und steht auf dem Spielfeld nicht schon eine eigene Figur?
 			return true;
 		else
