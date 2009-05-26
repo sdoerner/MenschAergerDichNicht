@@ -26,10 +26,15 @@ public class MenschMain {
     public static void main(String[] args) {
 		GuiInterface gui = Gui.getGui();
 		gui.starteGui();
+		
+		
+		
 		Server s = new Server(9999);
         s.lausche();
         System.out.println("test");
     	
+        
+        
         spieler = new Vector<Spieler>(4);
         verbindeSpieler("Sascha");
         
