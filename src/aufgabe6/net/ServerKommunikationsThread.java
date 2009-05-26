@@ -1,9 +1,8 @@
 package aufgabe6.net;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -11,9 +10,7 @@ public class ServerKommunikationsThread implements Runnable
 {
     private Socket socket;
     private InputStream is;
-    private DataInputStream dis;
-    private InputStreamReader isr;
-    private DataOutputStream dos;
+    private OutputStream os;
     private boolean abbrechen;
     private Scanner sc;
     
@@ -24,7 +21,8 @@ public class ServerKommunikationsThread implements Runnable
         try{
 //        socket.setKeepAlive(true);
         
-        is= socket.getInputStream();
+        is= this.socket.getInputStream();
+        os=this.socket.getOutputStream();
         sc = new Scanner(is);
         } catch (Exception e)
         {
@@ -36,6 +34,7 @@ public class ServerKommunikationsThread implements Runnable
     @Override
     public void run()
     {
+        String s;
      //dauerhaft auf Nachrichten vom Client warten
         while (!this.abbrechen)
         {
@@ -43,13 +42,28 @@ public class ServerKommunikationsThread implements Runnable
             {
                 if (sc.hasNextLine())
                 {
-                    System.out.println(sc.nextLine());
+                    s = sc.nextLine();
+                    if (s.compareTo("antworte")==0)
+                        this.sendString("meine Antwort");
+                    System.out.println(s);
                 }
             } catch (Exception e)
             {
                 System.err.println("exp");
                 e.printStackTrace();
             }
+        }
+    }
+    
+    public void sendString(String s)
+    {
+        try
+        {
+        os.write(s.getBytes());
+        }
+        catch (IOException e)
+        {
+            System.err.println("Konnte nicht ");
         }
     }
 
