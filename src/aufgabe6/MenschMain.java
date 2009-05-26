@@ -1,5 +1,7 @@
 package aufgabe6;
 
+import aufgabe6.net.Server;
+
 public class MenschMain
 {
 
@@ -8,8 +10,10 @@ public class MenschMain
      */
     public static void main(String[] args)
     {
-        // TODO Auto-generated method stub
-        System.out.println("test");;
+        Server s = new Server(9999);
+        s.lausche();
+        System.out.println("test");
+//        s.schliessen();
     }
 
 }
