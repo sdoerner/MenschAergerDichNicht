@@ -1,6 +1,7 @@
 package aufgabe6;
 
 import java.util.Vector;
+import aufgabe6.net.Server;
 
 public class MenschMain {
 	private static Vector<Spieler> spieler = null;
@@ -50,6 +51,10 @@ public class MenschMain {
 	        		break;
 	        	}
         	}
+        	
+        	Server s = new Server(9999);
+            s.lausche();
+            System.out.println("test");
         }
     }
 
