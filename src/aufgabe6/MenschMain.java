@@ -8,7 +8,8 @@ public class MenschMain
      */
     public static void main(String[] args)
     {
-        // TODO Auto-generated method stub
+        GuiInterface gui = Gui.getGui();
+        gui.starteGui();
         System.out.println("test");;
     }
 
