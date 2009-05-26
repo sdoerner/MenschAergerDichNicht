@@ -40,8 +40,9 @@ public class Spielfeld {
 		byte anzahlFelder = 40;
 		int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
 		
-		if (felder.size() > startPosition && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {
-				endPosition = anzahlFelder - 1 + (spieler.getSpielernummer() * 4) + anzahlSchritte;
+		if (felder.size() > startPosition && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
+				if (startPosition + anzahlSchritte > (anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt())		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
+					endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - ((anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt()));
 				anzahlFelder += 16;
 		}
 
@@ -62,10 +63,12 @@ public class Spielfeld {
 	public boolean bewegeFigur(Spieler spieler, int startPosition, int anzahlSchritte) {
 		if (istZugGueltig(spieler, startPosition, anzahlSchritte)) {
 			byte anzahlFelder = 40;
-			if (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())
-				anzahlFelder += 4;
-			
 			int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
+			
+			if (felder.size() > startPosition && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
+					if (startPosition + anzahlSchritte > (anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt())		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
+						endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - ((anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt()));
+			}
 			
 			if (felder.get(endPosition).getBesitzer() != null)
 				felder.get(endPosition).entferne();
