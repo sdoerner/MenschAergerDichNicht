@@ -10,7 +10,7 @@ public class MenschMain
     {
         GuiInterface gui = Gui.getGui();
         gui.starteGui();
-        System.out.println("test");;
+        System.out.println("test");
     }
 
 }
