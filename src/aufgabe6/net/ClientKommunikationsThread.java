@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+import aufgabe6.net.Nachricht.KEYS;
+
 public class ClientKommunikationsThread implements Runnable
 {
     private Socket socket;
@@ -30,6 +32,9 @@ public class ClientKommunikationsThread implements Runnable
         } catch (Exception e) {
             System.err.println("Konnte auf dem Server einen Kommunikationsthread nicht starten");
         }
+        Nachricht n = new Nachricht("Client1", "Server");
+        n.setValue(KEYS.SPIELER_NAME, "Spieler1");
+        this.sendNachricht(n);
     }
 
     /**

@@ -2,6 +2,7 @@ package aufgabe6.net;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
@@ -16,6 +17,7 @@ public class ServerKommunikationsThread implements Runnable
     private OutputStream os;
     private boolean abbrechen;
     private Scanner sc;
+    private ObjectInputStream ois;
     
     public ServerKommunikationsThread(Socket socket)
     {
@@ -26,7 +28,8 @@ public class ServerKommunikationsThread implements Runnable
         
         is= this.socket.getInputStream();
         os=this.socket.getOutputStream();
-        sc = new Scanner(is);
+        ois = new ObjectInputStream(is);
+//        sc = new Scanner(is);
         } catch (Exception e)
         {
             System.err.println("Konnte auf dem Server einen Kommunikationsthread nicht starten");
@@ -43,19 +46,24 @@ public class ServerKommunikationsThread implements Runnable
         {
             try
             {
-                if (sc.hasNextLine())
+                if (ois.available()>0)
                 {
-                    s = sc.nextLine();
-                    if (s.compareTo("antworte")==0)
-                    {
-                        Nachricht n = new Nachricht("meinsender", "meinempfaenger");
-                        n.setValue(KEYS.SPIELER_NAME, "Sebastian Vettel");
-                        sendeNachricht(n);
-                        this.sendString("meine Antwort");
-                    }
-
-                    System.out.println(s);
+                    Nachricht n = (Nachricht)ois.readObject();
+                    System.out.println(n.getValue(KEYS.SPIELER_NAME));
                 }
+//                if (sc.hasNextLine())
+//                {
+//                    s = sc.nextLine();
+//                    if (s.compareTo("antworte")==0)
+//                    {
+//                        Nachricht n = new Nachricht("meinsender", "meinempfaenger");
+//                        n.setValue(KEYS.SPIELER_NAME, "Sebastian Vettel");
+//                        sendeNachricht(n);
+//                        this.sendString("meine Antwort");
+//                    }
+//
+//                    System.out.println(s);
+//                }
             } catch (Exception e)
             {
                 System.err.println("exp");
