@@ -44,7 +44,8 @@ public class Server
                     while (true)
                     {
                         Socket socket = lauschSocket.accept();
-                        initialisiereNeuenClientThread(socket);
+                        if (socket!=null)
+                            initialisiereNeuenClientThread(socket);
                     }
                 } catch (IOException e)
                 {

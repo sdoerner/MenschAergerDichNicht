@@ -6,7 +6,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 import aufgabe6.net.Nachricht.KEYS;
 
@@ -16,8 +15,6 @@ public class ServerKommunikationsThread implements Runnable
     private InputStream is;
     private OutputStream os;
     private boolean abbrechen;
-    private Scanner sc;
-    private ObjectInputStream ois;
     
     public ServerKommunikationsThread(Socket socket)
     {
@@ -26,9 +23,10 @@ public class ServerKommunikationsThread implements Runnable
         try{
 //        socket.setKeepAlive(true);
         
-        is= this.socket.getInputStream();
+        is=this.socket.getInputStream();
         os=this.socket.getOutputStream();
-        ois = new ObjectInputStream(is);
+        Nachricht n = new Nachricht("foo", "bar");
+        this.sendeNachricht(n);
 //        sc = new Scanner(is);
         } catch (Exception e)
         {
@@ -46,24 +44,13 @@ public class ServerKommunikationsThread implements Runnable
         {
             try
             {
-                if (ois.available()>0)
+                if (is.available() > 0)
                 {
-                    Nachricht n = (Nachricht)ois.readObject();
+                    ObjectInputStream ois = new ObjectInputStream(is);
+                    Nachricht n = (Nachricht) ois.readObject();
                     System.out.println(n.getValue(KEYS.SPIELER_NAME));
                 }
-//                if (sc.hasNextLine())
-//                {
-//                    s = sc.nextLine();
-//                    if (s.compareTo("antworte")==0)
-//                    {
-//                        Nachricht n = new Nachricht("meinsender", "meinempfaenger");
-//                        n.setValue(KEYS.SPIELER_NAME, "Sebastian Vettel");
-//                        sendeNachricht(n);
-//                        this.sendString("meine Antwort");
-//                    }
-//
-//                    System.out.println(s);
-//                }
+
             } catch (Exception e)
             {
                 System.err.println("exp");
@@ -77,6 +64,7 @@ public class ServerKommunikationsThread implements Runnable
         try{
         ObjectOutputStream oos = new ObjectOutputStream(os);
         oos.writeObject(n);
+        oos.flush();
         }
         catch (IOException e){
             System.err.println("Fehler beim Senden der Nachricht.");
