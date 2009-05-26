@@ -60,7 +60,7 @@ public class Gui implements GuiInterface {
 	
 	private JTextPane spielNachrichten = null;
 	
-	private JPanel spielfeld = null;
+	private Spielfeld spielfeld = null;
 
 	private JPanel spielfeldContainer = null;
 	
@@ -104,9 +104,7 @@ public class Gui implements GuiInterface {
 		
 		this.spielfeldContainer  = new JPanel();
 		
-		this.spielfeld = new JPanel(new GridLayout(11,11));
-		this.spielfeld.setBackground(Color.WHITE);
-		this.spielfeld.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.spielfeld = new Spielfeld();
 		
 		spielfeldContainer.add(this.spielfeld);
 		
@@ -187,7 +185,23 @@ public class Gui implements GuiInterface {
 
 	private void passeSpielfeldAn() {
 		int groesse = Math.min(this.spielfeldContainer.getWidth(), this.spielfeldContainer.getHeight());
-		this.spielfeld.setPreferredSize(new Dimension(groesse,groesse));
+		this.spielfeld.setPreferredSize(new Dimension(groesse-(groesse%11),groesse-(groesse%11)));
 		this.spielfeldContainer.validate();	
 	}
+	
+	@SuppressWarnings({ "serial" })
+	private class Spielfeld extends JPanel{
+		public Spielfeld(){
+			this.setBackground(Color.WHITE);
+		}
+		
+		public void zeichneLeeresFeld(Color fuellFarbe){
+			
+		}
+		
+		public void zeichneSpielfeld(){
+			
+		}
+	}
+	
 }
