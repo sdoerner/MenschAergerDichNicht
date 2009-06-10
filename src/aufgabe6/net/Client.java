@@ -33,7 +33,7 @@ public class Client {
     public void verbinde(String theIP) {
     	Socket so;
 		try {
-			InetSocketAddress inet = new InetSocketAddress(theIP, 0);
+			InetSocketAddress inet = new InetSocketAddress(theIP, 9999);
 			so = new Socket();
 			so.connect(inet);
 			initialisiereKommunikationsThread(so);

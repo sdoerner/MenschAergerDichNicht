@@ -18,6 +18,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -42,6 +43,7 @@ public class Gui implements GuiInterface {
 	private static final Dimension FENSTER_MIN_DIM = new Dimension(800,600);
 
 	private static final int NAMENSFELD_MAX_BREITE = 20;
+	private static final int IPFELD_MAX_BREITE = 20;
 
 	private JFrame fenster = null;
 	
@@ -58,12 +60,18 @@ public class Gui implements GuiInterface {
 	private DefaultMutableTreeNode wurzelKnotenServerAnsicht = null;
 	
 	private JTextField namensFeld = null;
+	public String getNamensFeldInhalt()
+    {
+        return namensFeld.getText();
+    }
+
+    private JTextField ipFeld = null;
 	
 	private JPanel knopfContainerServerAnsicht = null;
 	
 	private JButton erstellKnopf = null;
 	
-	private JButton auffrischKnopf = null;
+	private JButton hinzufuegenKnopf = null;
 	
 	private JButton verbindeKnopf = null;
 	
@@ -127,13 +135,11 @@ public class Gui implements GuiInterface {
 		this.serverSicht = new JPanel(new BorderLayout());
 		
 		serverList = new DefaultListModel();
-		serverList.addElement("blubb");
 		
-		JList serverAnsicht = new JList();
+		final JList serverAnsicht = new JList(serverList);
 		serverAnsicht.setLayoutOrientation(JList.VERTICAL);
 		serverAnsicht.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		serverAnsicht.setListData(serverList.toArray());
 		
 		
 //		this.wurzelKnotenServerAnsicht = new DefaultMutableTreeNode("verfuegbare Server");
@@ -144,11 +150,11 @@ public class Gui implements GuiInterface {
 		
 		this.serverSicht.add(this.serverAnsichtsContainer,BorderLayout.NORTH);
 		
-		this.knopfContainerServerAnsicht = new JPanel(new GridLayout(2,2));
+		this.knopfContainerServerAnsicht = new JPanel(new GridLayout(2,3));
 		
 		this.namensFeld  = new JTextField("Spielername", NAMENSFELD_MAX_BREITE);
 		this.namensFeld.setEditable(true);
-		
+				
 		this.knopfContainerServerAnsicht.add(this.namensFeld);
 		
 		this.erstellKnopf = new JButton("erstellen");
@@ -165,9 +171,26 @@ public class Gui implements GuiInterface {
 		);
 		this.knopfContainerServerAnsicht.add(this.erstellKnopf);
 		
-		this.auffrischKnopf = new JButton("auffrischen");
+		this.knopfContainerServerAnsicht.add(new JLabel());//free space
 		
-		this.knopfContainerServerAnsicht.add(this.auffrischKnopf);
+	    this.ipFeld = new JTextField("IP", IPFELD_MAX_BREITE);
+        this.ipFeld.setEditable(true);
+        this.knopfContainerServerAnsicht.add(this.ipFeld);
+
+        this.hinzufuegenKnopf = new JButton("hinzufÃ¼gen");
+		this.knopfContainerServerAnsicht.add(this.hinzufuegenKnopf);
+		this.hinzufuegenKnopf.addActionListener(new ActionListener()
+		{
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                Client c = Client.getInstance();
+                Client.ServerInfo si = c.new ServerInfo(namensFeld.getText(),ipFeld.getText());
+                Client.getInstance().getServerInfos().add(si);
+                serverList.addElement(namensFeld.getText());
+            }
+		}
+		        );
 		
 		this.verbindeKnopf = new JButton("verbinden");
 		this.verbindeKnopf.addActionListener(
@@ -178,7 +201,8 @@ public class Gui implements GuiInterface {
                     public void actionPerformed(ActionEvent e)
                     {
                         Client c = Client.getInstance();
-                        int index = 0;
+                        int index = serverAnsicht.getSelectedIndex();
+                        System.out.println(c.getServerInfos().get(index).getIp());
                         c.verbinde(c.getServerInfos().get(index).getIp());
                     }
 		            
@@ -230,7 +254,7 @@ public class Gui implements GuiInterface {
 		int groesse = Math.min(this.spielfeldContainer.getWidth(), this.spielfeldContainer.getHeight());
 		Dimension d = new Dimension(groesse-(groesse%11),groesse-(groesse%11));
 		this.spielfeld.setPreferredSize(d);
-		this.spielfeld.setSize(d); // damit das Spielfeld auch unter Windows sofort in der richtigen Größe angezeigt wird... 
+		this.spielfeld.setSize(d); // damit das Spielfeld auch unter Windows sofort in der richtigen Grï¿½ï¿½e angezeigt wird... 
 		this.spielfeldContainer.validate();	
 	}
 	

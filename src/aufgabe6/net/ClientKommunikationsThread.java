@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import aufgabe6.Gui;
 import aufgabe6.net.Nachricht.KEYS;
 
 public class ClientKommunikationsThread implements Runnable
@@ -31,7 +32,7 @@ public class ClientKommunikationsThread implements Runnable
             e.printStackTrace();
         }
         Nachricht n = new Nachricht("Client1", "Server");
-        n.setValue(KEYS.SPIELER_NAME, "Spieler1");
+        n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getNamensFeldInhalt());
         this.sendNachricht(n);
     }
 
