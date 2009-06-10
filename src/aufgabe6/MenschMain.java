@@ -16,12 +16,7 @@ public class MenschMain {
 		GuiInterface gui = Gui.getGui();
 		gui.starteGui();
 		
-		
-		
-		Client s = new Client(9999);
-		s.verbinde("192.168.0.1");
         System.out.println("test");
-        
         
         Spiel dasSpiel = new Spiel();
         dasSpiel.start();

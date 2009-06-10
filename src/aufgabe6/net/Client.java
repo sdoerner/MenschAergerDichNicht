@@ -1,16 +1,27 @@
 package aufgabe6.net;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.Vector;
 
 public class Client {
-	private int port;
+	private Vector<ServerInfo> serverInfos;
+    private Client() 
+    {
+        serverInfos = new Vector<ServerInfo>();
+    }
+    
+    
+    
+    private static Client instance;
+    public static Client getInstance()
+    {
+        if (instance ==null)
+            instance = new Client();
+        return instance;
+    }
 	
     private void initialisiereKommunikationsThread(Socket socket)
     {
@@ -18,15 +29,11 @@ public class Client {
         Thread thread = new Thread(clientKom);
         thread.start();
     }
-	
-    public Client(int port) {
-        this.port = port;
-    }
-    
+	    
     public void verbinde(String theIP) {
     	Socket so;
 		try {
-			InetSocketAddress inet = new InetSocketAddress(theIP, port);
+			InetSocketAddress inet = new InetSocketAddress(theIP, 0);
 			so = new Socket();
 			so.connect(inet);
 			initialisiereKommunikationsThread(so);
@@ -35,5 +42,36 @@ public class Client {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
+    }
+    public Vector<ServerInfo> getServerInfos()
+    {
+        return serverInfos;
+    }
+    public class ServerInfo
+    {
+        private String name;
+        private String ip;
+        public ServerInfo(String name, String ip)
+        {
+            this.setName(name);
+            this.setIp(ip);
+        }
+        public void setName(String name)
+        {
+            this.name = name;
+        }
+        public String getName()
+        {
+            return name;
+        }
+        public void setIp(String ip)
+        {
+            this.ip = ip;
+        }
+        public String getIp()
+        {
+            return ip;
+        }
+        
     }
 }

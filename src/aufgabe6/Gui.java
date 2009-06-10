@@ -11,6 +11,8 @@ import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -24,6 +26,9 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import aufgabe6.net.Client;
+import aufgabe6.net.Server;
 
 /**
  * @author sascha
@@ -134,7 +139,17 @@ public class Gui implements GuiInterface {
 		this.knopfContainerServerAnsicht.add(this.namensFeld);
 		
 		this.erstellKnopf = new JButton("erstellen");
-		
+		this.erstellKnopf.addActionListener(
+		        new ActionListener()
+		        {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        Server s = new Server(9999);
+                        s.lausche();
+                    }
+		        }
+		);
 		this.knopfContainerServerAnsicht.add(this.erstellKnopf);
 		
 		this.auffrischKnopf = new JButton("auffrischen");
@@ -142,6 +157,21 @@ public class Gui implements GuiInterface {
 		this.knopfContainerServerAnsicht.add(this.auffrischKnopf);
 		
 		this.verbindeKnopf = new JButton("verbinden");
+		this.verbindeKnopf.addActionListener(
+		        new ActionListener()
+		        {
+
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        Client c = Client.getInstance();
+                        int index = 0;
+                        c.verbinde(c.getServerInfos().get(index).getIp());
+                    }
+		            
+		        }
+		
+		);
 		
 		this.knopfContainerServerAnsicht.add(this.verbindeKnopf);
 		
@@ -308,5 +338,4 @@ public class Gui implements GuiInterface {
 			return currentColor;
 		}
 	}
-	
 }
