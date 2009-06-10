@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,7 +23,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.JList;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -41,6 +44,8 @@ public class Gui implements GuiInterface {
 	private static final int NAMENSFELD_MAX_BREITE = 20;
 
 	private JFrame fenster = null;
+	
+	private DefaultListModel serverList = null;
 	
 	private JPanel serverSicht = null;
 	
@@ -97,7 +102,7 @@ public class Gui implements GuiInterface {
 			e.printStackTrace();
 		}
 		
-		this.fenster = new JFrame("Mensch Ã¤rger dich nicht");
+		this.fenster = new JFrame("Mensch aergere dich nicht");
 		this.fenster.setMinimumSize(FENSTER_MIN_DIM);
 		this.fenster.setUndecorated(false);
 		this.fenster.setLocationByPlatform(true);
@@ -121,11 +126,19 @@ public class Gui implements GuiInterface {
 		
 		this.serverSicht = new JPanel(new BorderLayout());
 		
-		JTree serverAnsicht = new JTree();
+		serverList = new DefaultListModel();
+		serverList.addElement("blubb");
 		
-		this.wurzelKnotenServerAnsicht = new DefaultMutableTreeNode("verfÃ¼gbare Server");
+		JList serverAnsicht = new JList();
+		serverAnsicht.setLayoutOrientation(JList.VERTICAL);
+		serverAnsicht.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
-		serverAnsicht = new JTree(this.wurzelKnotenServerAnsicht);
+		serverAnsicht.setListData(serverList.toArray());
+		
+		
+//		this.wurzelKnotenServerAnsicht = new DefaultMutableTreeNode("verfuegbare Server");
+//		
+//		serverAnsicht = new JTree(this.wurzelKnotenServerAnsicht);
 		
 		this.serverAnsichtsContainer = new JScrollPane(serverAnsicht);
 		
@@ -195,7 +208,7 @@ public class Gui implements GuiInterface {
 		unterteiler.setRightComponent(rechtesUnterFenster);
 		
 		this.fenster.add(unterteiler);
-		
+	
 	}
 	
 	/* (non-Javadoc)
@@ -215,7 +228,9 @@ public class Gui implements GuiInterface {
 
 	private void passeSpielfeldAn() {
 		int groesse = Math.min(this.spielfeldContainer.getWidth(), this.spielfeldContainer.getHeight());
-		this.spielfeld.setPreferredSize(new Dimension(groesse-(groesse%11),groesse-(groesse%11)));
+		Dimension d = new Dimension(groesse-(groesse%11),groesse-(groesse%11));
+		this.spielfeld.setPreferredSize(d);
+		this.spielfeld.setSize(d); // damit das Spielfeld auch unter Windows sofort in der richtigen Größe angezeigt wird... 
 		this.spielfeldContainer.validate();	
 	}
 	

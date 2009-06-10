@@ -16,8 +16,6 @@ public class MenschMain {
 		GuiInterface gui = Gui.getGui();
 		gui.starteGui();
 		
-        System.out.println("test");
-        
         Spiel dasSpiel = new Spiel();
         dasSpiel.start();
     }
