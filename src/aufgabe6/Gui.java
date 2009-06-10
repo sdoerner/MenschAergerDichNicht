@@ -13,6 +13,8 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -220,7 +222,7 @@ public class Gui implements GuiInterface {
 	}
 	
 	@SuppressWarnings({ "serial" })
-	private class GuiSpielfeld extends JPanel{
+	private class GuiSpielfeld extends JPanel implements MouseListener{
 		private byte [][] feld = null;
 		private Point[] figurenPositionen = null;
 		private int[] figurenImHaus = null;
@@ -265,9 +267,9 @@ public class Gui implements GuiInterface {
 					Color currentColor= berechneFarbe(feld[i][j]);
 					if(currentColor == null) continue;
 					g2.setColor(currentColor);
-					g2.fillOval(j*laenge+2, i*laenge+laenge/10, laenge-laenge/5, laenge-laenge/5);
+					g2.fillOval(j*laenge+laenge/10, i*laenge+laenge/10, laenge-laenge/5, laenge-laenge/5);
 					g2.setColor(Color.BLACK);
-					g2.drawOval(j*laenge+2, i*laenge+laenge/10, laenge-laenge/5, laenge-laenge/5);			
+					g2.drawOval(j*laenge+laenge/10, i*laenge+laenge/10, laenge-laenge/5, laenge-laenge/5);			
 				}
 			}
 			for(Figur f: Spielfeld.getInstance().getWahrscheinlichFiguren()){
@@ -275,9 +277,9 @@ public class Gui implements GuiInterface {
 					Color currentColor = berechneFarbe(f.getBesitzer().getSpielernummer()+2);
 					g2.setColor(currentColor.darker().darker());
 					Point position = berechnePosition(f,laenge);
-					g2.fillOval(position.x, position.y, laenge-laenge/16, laenge-laenge/16);
+					g2.fillOval(position.x, position.y, laenge-laenge/3, laenge-laenge/3);
 					g2.setColor(currentColor.darker());
-					g2.fillOval(position.x, position.y, laenge-laenge/32, laenge-laenge/32);
+					g2.fillOval(position.x, position.y, laenge-laenge/2, laenge-laenge/2);
 				}
 			}
 			g2.setColor(tmpColor);	
@@ -310,7 +312,9 @@ public class Gui implements GuiInterface {
 					return null;
 				}
 			}
-			return null;
+			position.x = position.x*laenge+laenge/3;
+			position.y = position.y*laenge+laenge/3;
+			return position;
 		}
 
 		private Color berechneFarbe(int i) {
@@ -337,5 +341,46 @@ public class Gui implements GuiInterface {
 			}
 			return currentColor;
 		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			int size = this.getWidth();
+			Point position = new Point(e.getX()*11/size, e.getY()*11/size);
+			for(Figur f: Spielfeld.getInstance().getWahrscheinlichFiguren()){
+				if (f != null) {
+					if (f.istInZiel() || f.getPosition() == -1) {
+						if(figurenPositionen[f.getPosition()].equals(position)){
+							
+						}
+					}
+				}
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		
 	}
 }

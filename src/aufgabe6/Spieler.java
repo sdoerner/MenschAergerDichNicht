@@ -35,7 +35,12 @@ public class Spieler {
 	 * @return ob eine Figur bewegt werden konnte
 	 */
 	public boolean ziehe(int anzahlSchritte) {
-		// TODO benutze Thread zum Pollen der vom User gewählten Figur
+		Thread warte = new WartenThread();
+		try {
+			warte.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		int figurNummer = 0;
 		
 		if (Spielfeld.getInstance().bewegeFigur(this, this.figuren.get(figurNummer).getPosition(), anzahlSchritte)) {
