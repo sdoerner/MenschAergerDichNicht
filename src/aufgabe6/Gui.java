@@ -17,16 +17,22 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
+import javax.swing.JList;
 import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import aufgabe6.net.Client;
@@ -41,8 +47,11 @@ public class Gui implements GuiInterface {
 	private static final Dimension FENSTER_MIN_DIM = new Dimension(800,600);
 
 	private static final int NAMENSFELD_MAX_BREITE = 20;
+	private static final int IPFELD_MAX_BREITE = 20;
 
 	private JFrame fenster = null;
+	
+	private DefaultListModel serverList = null;
 	
 	private JPanel serverSicht = null;
 	
@@ -55,12 +64,18 @@ public class Gui implements GuiInterface {
 	private DefaultMutableTreeNode wurzelKnotenServerAnsicht = null;
 	
 	private JTextField namensFeld = null;
+	public String getNamensFeldInhalt()
+    {
+        return namensFeld.getText();
+    }
+
+    private JTextField ipFeld = null;
 	
 	private JPanel knopfContainerServerAnsicht = null;
 	
 	private JButton erstellKnopf = null;
 	
-	private JButton auffrischKnopf = null;
+	private JButton hinzufuegenKnopf = null;
 	
 	private JButton verbindeKnopf = null;
 	
@@ -99,7 +114,7 @@ public class Gui implements GuiInterface {
 			e.printStackTrace();
 		}
 		
-		this.fenster = new JFrame("Mensch ärger dich nicht");
+		this.fenster = new JFrame("Mensch aergere dich nicht");
 		this.fenster.setMinimumSize(FENSTER_MIN_DIM);
 		this.fenster.setUndecorated(false);
 		this.fenster.setLocationByPlatform(true);
@@ -123,42 +138,71 @@ public class Gui implements GuiInterface {
 		
 		this.serverSicht = new JPanel(new BorderLayout());
 		
-		JTree serverAnsicht = new JTree();
+		serverList = new DefaultListModel();
 		
-		this.wurzelKnotenServerAnsicht = new DefaultMutableTreeNode("verfügbare Server");
-		
-		serverAnsicht = new JTree(this.wurzelKnotenServerAnsicht);
+		final JList serverAnsicht = new JList(serverList);
+		serverAnsicht.setLayoutOrientation(JList.VERTICAL);
+		serverAnsicht.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		serverAnsicht.addListSelectionListener(new ListSelectionListener() {
+
+			public void valueChanged(ListSelectionEvent event) {
+				if (event.getFirstIndex() >= 0) {
+					verbindeKnopf.setEnabled(true);
+				} else {
+					verbindeKnopf.setEnabled(false);
+				}
+			}
+			
+		});
 		
 		this.serverAnsichtsContainer = new JScrollPane(serverAnsicht);
 		
 		this.serverSicht.add(this.serverAnsichtsContainer,BorderLayout.NORTH);
 		
-		this.knopfContainerServerAnsicht = new JPanel(new GridLayout(2,2));
+		this.knopfContainerServerAnsicht = new JPanel(new GridLayout(2,3));
 		
 		this.namensFeld  = new JTextField("Spielername", NAMENSFELD_MAX_BREITE);
+		this.namensFeld.setFont(this.namensFeld.getFont().deriveFont(9.f));
 		this.namensFeld.setEditable(true);
-		
-		this.knopfContainerServerAnsicht.add(this.namensFeld);
-		
+						
 		this.erstellKnopf = new JButton("erstellen");
+		this.erstellKnopf.setToolTipText("Startet einen Serverprozeß im Hintergrund, der auf Verbindungen wartet.");
 		this.erstellKnopf.addActionListener(
 		        new ActionListener()
 		        {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        Server s = new Server(9999);
+                        Server s = new Server(9999, namensFeld.getText());
                         s.lausche();
+                        erstellKnopf.setToolTipText("Im Moment läuft bereits ein Serverprozess.");
+                        erstellKnopf.setEnabled(false);
                     }
 		        }
-		);
-		this.knopfContainerServerAnsicht.add(this.erstellKnopf);
+		)		this.namensFeld.setFont(this.namensFeld.getFont().deriveFont(9.f));
+;
 		
-		this.auffrischKnopf = new JButton("auffrischen");
-		
-		this.knopfContainerServerAnsicht.add(this.auffrischKnopf);
+	    this.ipFeld = new JTextField("IP", IPFELD_MAX_BREITE);
+		this.ipFeld.setFont(this.ipFeld.getFont().deriveFont(9.f));
+        this.ipFeld.setEditable(true);
+
+        this.hinzufuegenKnopf = new JButton("hinzufügen");
+		this.hinzufuegenKnopf.addActionListener(new ActionListener()
+		{
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                Client c = Client.getInstance();
+                Client.ServerInfo si = c.new ServerInfo(namensFeld.getText(),ipFeld.getText());
+                Client.getInstance().getServerInfos().add(si);
+                serverList.addElement(namensFeld.getText());
+            }
+		}
+		        );
 		
 		this.verbindeKnopf = new JButton("verbinden");
+		this.verbindeKnopf.setEnabled(false);
 		this.verbindeKnopf.addActionListener(
 		        new ActionListener()
 		        {
@@ -167,14 +211,20 @@ public class Gui implements GuiInterface {
                     public void actionPerformed(ActionEvent e)
                     {
                         Client c = Client.getInstance();
-                        int index = 0;
-                        c.verbinde(c.getServerInfos().get(index).getIp());
+                        int index = serverAnsicht.getSelectedIndex();
+                        System.out.println(c.getServerInfos().get(index).getIp());
+                        c.verbinde(c.getServerInfos().get(index).getIp(), namensFeld.getText());
                     }
 		            
 		        }
 		
 		);
 		
+		this.knopfContainerServerAnsicht.add(this.namensFeld);
+	    this.knopfContainerServerAnsicht.add(this.ipFeld);
+		this.knopfContainerServerAnsicht.add(this.hinzufuegenKnopf);
+		this.knopfContainerServerAnsicht.add(new JLabel());//free space
+        this.knopfContainerServerAnsicht.add(this.erstellKnopf);
 		this.knopfContainerServerAnsicht.add(this.verbindeKnopf);
 		
 		this.serverSicht.add(this.knopfContainerServerAnsicht, BorderLayout.CENTER);
@@ -197,12 +247,13 @@ public class Gui implements GuiInterface {
 		unterteiler.setRightComponent(rechtesUnterFenster);
 		
 		this.fenster.add(unterteiler);
-		
+	
 	}
 	
 	/* (non-Javadoc)
 	 * @see aufgabe6.GuiInterface#aenderFigurPosition(aufgabe6.Figur, int, int)
 	 */
+
 	@Override
 	public void aenderFigurPosition(Figur f, int vorher, int nachher) {
 		// TODO Auto-generated method stub
@@ -217,7 +268,9 @@ public class Gui implements GuiInterface {
 
 	private void passeSpielfeldAn() {
 		int groesse = Math.min(this.spielfeldContainer.getWidth(), this.spielfeldContainer.getHeight());
-		this.spielfeld.setPreferredSize(new Dimension(groesse-(groesse%11),groesse-(groesse%11)));
+		Dimension d = new Dimension(groesse-(groesse%11),groesse-(groesse%11));
+		this.spielfeld.setPreferredSize(d);
+		this.spielfeld.setSize(d); // damit das Spielfeld auch unter Windows sofort in der richtigen Gr��e angezeigt wird... 
 		this.spielfeldContainer.validate();	
 	}
 	

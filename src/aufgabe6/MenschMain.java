@@ -13,11 +13,11 @@ public class MenschMain {
      * @param args
      */
     public static void main(String[] args) {
+//        Client c = Client.getInstance();
+//        c.verbinde("172.16.25.122");
 		GuiInterface gui = Gui.getGui();
 		gui.starteGui();
 		
-        System.out.println("test");
-        
         Spiel dasSpiel = new Spiel();
         dasSpiel.start();
     }

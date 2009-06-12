@@ -7,19 +7,25 @@ import java.net.Socket;
 public class Server
 {
     private ServerSocket lauschSocket;
-
     private int port;
+    private String serverName;
+
+    public String getServerName()
+    {
+        return serverName;
+    }
 
     private void initialisiereNeuenClientThread(Socket socket)
     {
-        ServerKommunikationsThread serverKom = new ServerKommunikationsThread(socket);
+        ServerKommunikationsThread serverKom = new ServerKommunikationsThread(socket, this);
         Thread thread = new Thread(serverKom);
         thread.start();
     }
 
-    public Server(int port)
+    public Server(int port, String name)
     {
         this.port = port;
+        this.serverName = name;
     }
 
     public boolean lausche()
