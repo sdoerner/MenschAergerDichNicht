@@ -8,6 +8,7 @@ import java.util.Vector;
 
 public class Client {
 	private Vector<ServerInfo> serverInfos;
+	private String name;
     private Client() 
     {
         serverInfos = new Vector<ServerInfo>();
@@ -30,7 +31,8 @@ public class Client {
         thread.start();
     }
 	    
-    public void verbinde(String theIP) {
+    public void verbinde(String theIP, String name) {
+        this.name = name;
     	Socket so;
 		try {
 			InetSocketAddress inet = new InetSocketAddress(theIP, 9999);
@@ -47,18 +49,23 @@ public class Client {
     {
         return serverInfos;
     }
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
     public class ServerInfo
     {
         private String name;
         private String ip;
         public ServerInfo(String name, String ip)
         {
-            this.setName(name);
-            this.setIp(ip);
-        }
-        public void setName(String name)
-        {
             this.name = name;
+            this.setIp(ip);
         }
         public String getName()
         {
