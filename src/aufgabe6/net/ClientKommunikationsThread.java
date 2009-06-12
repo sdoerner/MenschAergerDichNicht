@@ -34,7 +34,7 @@ public class ClientKommunikationsThread implements Runnable
             System.err.println("Konnte auf dem Client einen Kommunikationsthread nicht starten");
             e.printStackTrace();
         }
-        Nachricht n = new Nachricht("Client1", NACHRICHTEN_TYP.CLIENT_HALLO);
+        Nachricht n = new Nachricht("Client1", NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getSpielerNamensFeldInhalt());
         this.sendNachricht(n);
     }
@@ -49,7 +49,7 @@ public class ClientKommunikationsThread implements Runnable
                 if (input.available() > 0) {
                 	ObjectInputStream ois = new ObjectInputStream(input);
                     Nachricht newNachricht = (Nachricht)ois.readObject();
-                    if (newNachricht.getNachrichtenTyp()==NACHRICHTEN_TYP.SERVER_HALLO)
+                    if (newNachricht.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
                         System.out.println("received Server Hello from "+newNachricht.getSender());
                 }
             } catch (Exception e) {

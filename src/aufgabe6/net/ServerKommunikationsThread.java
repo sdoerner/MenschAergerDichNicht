@@ -30,7 +30,7 @@ public class ServerKommunikationsThread implements Runnable
         
         is=this.socket.getInputStream();
         os=this.socket.getOutputStream();
-        Nachricht n = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SERVER_HALLO);
+        Nachricht n = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         this.sendeNachricht(n);
 //        sc = new Scanner(is);
         } catch (Exception e)
@@ -53,7 +53,7 @@ public class ServerKommunikationsThread implements Runnable
                 {
                     ObjectInputStream ois = new ObjectInputStream(is);
                     Nachricht n = (Nachricht) ois.readObject();
-                    if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.CLIENT_HALLO)
+                    if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
                         System.out.println("received Client hello from " + n.getValue(KEYS.SPIELER_NAME));
                     if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG)
                         bearbeiteBewegungsAufforderung(n);
