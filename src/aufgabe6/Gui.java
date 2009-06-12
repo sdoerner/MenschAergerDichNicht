@@ -178,9 +178,9 @@ public class Gui implements GuiInterface {
                         erstellKnopf.setEnabled(false);
                     }
 		        }
-		)		this.namensFeld.setFont(this.namensFeld.getFont().deriveFont(9.f));
-;
+        );
 		
+		this.namensFeld.setFont(this.namensFeld.getFont().deriveFont(9.f));		
 	    this.ipFeld = new JTextField("IP", IPFELD_MAX_BREITE);
 		this.ipFeld.setFont(this.ipFeld.getFont().deriveFont(9.f));
         this.ipFeld.setEditable(true);
