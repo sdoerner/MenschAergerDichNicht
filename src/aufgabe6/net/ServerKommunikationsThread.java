@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import aufgabe6.net.Nachricht.KEYS;
+import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
 
 public class ServerKommunikationsThread implements Runnable
 {
@@ -26,6 +27,7 @@ public class ServerKommunikationsThread implements Runnable
         is=this.socket.getInputStream();
         os=this.socket.getOutputStream();
         Nachricht n = new Nachricht("foo", "bar");
+        n.setNachrichtenTyp(NACHRICHTEN_TYP.SERVER_HALLO);
         this.sendeNachricht(n);
 //        sc = new Scanner(is);
         } catch (Exception e)
@@ -48,7 +50,8 @@ public class ServerKommunikationsThread implements Runnable
                 {
                     ObjectInputStream ois = new ObjectInputStream(is);
                     Nachricht n = (Nachricht) ois.readObject();
-                    System.out.println(n.getValue(KEYS.SPIELER_NAME));
+                    if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.CLIENT_HALLO)
+                        System.out.println("received Client hello from " + n.getValue(KEYS.SPIELER_NAME));
                 }
 
             } catch (Exception e)

@@ -16,11 +16,20 @@ public class Nachricht implements Serializable
 
     public static enum KEYS
     {
-        SPIELER_NAME
+        SPIELER_NAME,
+        NACHRICHTEN_TYP
     }
+    
+    public static enum NACHRICHTEN_TYP
+    {
+        CLIENT_HALLO, 
+        SERVER_HALLO
+    }
+    
     private String sender;
     private String empfaenger;
     private TreeMap<KEYS, String> data;
+    private NACHRICHTEN_TYP nachrichtenTyp;
 
     public Nachricht(String sender, String empfaenger) throws NullPointerException
     {
@@ -49,5 +58,15 @@ public class Nachricht implements Serializable
     public void setValue(KEYS key, String value)
     {
         data.put(key, value);
+    }
+
+    public void setNachrichtenTyp(NACHRICHTEN_TYP nachrichtenTyp)
+    {
+        this.nachrichtenTyp = nachrichtenTyp;
+    }
+
+    public NACHRICHTEN_TYP getNachrichtenTyp()
+    {
+        return nachrichtenTyp;
     }
 }
