@@ -26,7 +26,7 @@ public class Client {
 	
     private void initialisiereKommunikationsThread(Socket socket)
     {
-        ClientKommunikationsThread clientKom = new ClientKommunikationsThread(socket);
+        ClientKommunikationsThread clientKom = new ClientKommunikationsThread(socket, this);
         Thread thread = new Thread(clientKom);
         thread.start();
     }
