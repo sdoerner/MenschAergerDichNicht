@@ -15,6 +15,7 @@ public class ClientKommunikationsThread implements Runnable
 {
     private Socket socket;
     private InputStream input;
+    private ObjectInputStream ois = null;
     private ObjectOutputStream output;
     private boolean abbrechen;
     private Client client;
@@ -47,7 +48,8 @@ public class ClientKommunikationsThread implements Runnable
         while (!this.abbrechen) {
             try {
                 if (input.available() > 0) {
-                	ObjectInputStream ois = new ObjectInputStream(input);
+                	if (ois==null)
+                		ois = new ObjectInputStream(input);
                     Nachricht newNachricht = (Nachricht)ois.readObject();
                     if (newNachricht.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
                         System.out.println("received Server Hello from "+newNachricht.getSender());
@@ -75,6 +77,8 @@ public class ClientKommunikationsThread implements Runnable
     {
         Nachricht n = new Nachricht(this.client.getName(),NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG);
         n.setValue(KEYS.FIGUREN_POSITION, ""+x);
+        System.out.println("new Value: "+ n.getValue(KEYS.FIGUREN_POSITION));
+        System.out.println(n.getSender());
         this.sendNachricht(n);
     }
 }

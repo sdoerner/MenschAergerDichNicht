@@ -51,6 +51,7 @@ public class Gui implements GuiInterface {
 
 	private JFrame fenster = null;
 	
+	private boolean ichBinDerServer = false;
 	private DefaultListModel serverList = new DefaultListModel();
 	
 	private JPanel serverSicht = null;
@@ -113,6 +114,11 @@ public class Gui implements GuiInterface {
         this.spielfeldContainer.add(this.spielfeld);
         
         passeSpielfeldAn();
+        if (ichBinDerServer)
+        {
+        	this.erstellKnopf.setText("Spiel starten");
+        	this.erstellKnopf.setEnabled(true);
+        }
         
         System.out.println(this.spielfeld);
 	}
@@ -215,16 +221,24 @@ public class Gui implements GuiInterface {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        Server s = new Server(9999, spielerNamensFeld.getText());
-                        s.lausche();
-                        erstellKnopf.setToolTipText("Im Moment läuft bereits ein Serverprozess.");
-                        erstellKnopf.setEnabled(false);
+                    	if (ichBinDerServer)
+                    	{
+                    		Client.getInstance().getClientKommunikationsThread().sendeBewegungsAufforderung(5);
+                    		erstellKnopf.setEnabled(false);
+                    	}
+                    	else
+                    	{
+                    		Server s = new Server(9999, spielerNamensFeld.getText());
+                    		s.lausche();
+                    		erstellKnopf.setToolTipText("Im Moment läuft bereits ein Serverprozess.");
+                    		erstellKnopf.setEnabled(false);
                         
-                        Client c = Client.getInstance();
-                        Client.ServerInfo si = c.new ServerInfo(spielerNamensFeld.getText(),"127.0.0.1");
-                        Client.getInstance().getServerInfos().add(si);
-                        serverList.addElement(spielerNamensFeld.getText());
-                        
+                    		ichBinDerServer = true;
+                    		Client c = Client.getInstance();
+                    		Client.ServerInfo si = c.new ServerInfo(spielerNamensFeld.getText(),"127.0.0.1");
+                    		Client.getInstance().getServerInfos().add(si);
+                    		serverList.addElement(spielerNamensFeld.getText());
+                    	}
                     }
 		        }
         );
@@ -507,7 +521,7 @@ public class Gui implements GuiInterface {
 					}
 				}
 				if(figurExistiert){
-					// TODO serveraufruf wert: positionFigur
+					Client.getInstance().getClientKommunikationsThread().sendeBewegungsAufforderung(positionFigur);
 					break;
 				}
 			}

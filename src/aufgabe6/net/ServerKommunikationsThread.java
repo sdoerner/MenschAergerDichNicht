@@ -18,6 +18,8 @@ public class ServerKommunikationsThread implements Runnable
     private Server server;
     private InputStream is;
     private OutputStream os;
+    private ObjectInputStream ois=null;
+    private ObjectOutputStream oos;
     private boolean abbrechen;
     
     public ServerKommunikationsThread(Socket socket, Server server)
@@ -30,6 +32,7 @@ public class ServerKommunikationsThread implements Runnable
         
         is=this.socket.getInputStream();
         os=this.socket.getOutputStream();
+        oos = new ObjectOutputStream(os);
         Nachricht n = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         this.sendeNachricht(n);
 //        sc = new Scanner(is);
@@ -51,7 +54,8 @@ public class ServerKommunikationsThread implements Runnable
             {
                 if (is.available() > 0)
                 {
-                    ObjectInputStream ois = new ObjectInputStream(is);
+                	if (ois==null)
+                		ois = new ObjectInputStream(is);
                     Nachricht n = (Nachricht) ois.readObject();
                     if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
                         System.out.println("received Client hello from " + n.getValue(KEYS.SPIELER_NAME));
@@ -61,7 +65,7 @@ public class ServerKommunikationsThread implements Runnable
 
             } catch (Exception e)
             {
-                System.err.println("exp");
+                System.err.println("exp: "+ e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -70,7 +74,6 @@ public class ServerKommunikationsThread implements Runnable
     public void sendeNachricht(Nachricht n)
     {
         try{
-        ObjectOutputStream oos = new ObjectOutputStream(os);
         oos.writeObject(n);
         oos.flush();
         }

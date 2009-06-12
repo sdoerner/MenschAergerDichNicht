@@ -12,8 +12,14 @@ public class Client {
 	private Vector<ServerInfo> serverInfos;
 	private String name;
 	private ClientSicht clientRelevanteDaten = null;
+	private ClientKommunikationsThread clientKommunikationsThread;
 	
-    private Client() 
+    public ClientKommunikationsThread getClientKommunikationsThread()
+	{
+		return clientKommunikationsThread;
+	}
+
+	private Client() 
     {
         serverInfos = new Vector<ServerInfo>();
         this.clientRelevanteDaten = new ClientSicht();
@@ -33,8 +39,8 @@ public class Client {
 	
     private void initialisiereKommunikationsThread(Socket socket)
     {
-        ClientKommunikationsThread clientKom = new ClientKommunikationsThread(socket, this);
-        Thread thread = new Thread(clientKom);
+        clientKommunikationsThread = new ClientKommunikationsThread(socket, this);
+        Thread thread = new Thread(clientKommunikationsThread);
         thread.start();
     }
 	    

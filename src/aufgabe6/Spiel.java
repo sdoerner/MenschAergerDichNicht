@@ -36,6 +36,7 @@ public class Spiel extends Thread {
             {
                 e.printStackTrace();
             }
+            System.out.println("es geht weiter mit figur" + this.gewaehlteFigurenPosition);
 			aktuellerSpieler.ziehe(this.gewaehlteFigurenPosition,gewuerfelteZahl);
 		} while (gewuerfelteZahl == 6);
 	}
