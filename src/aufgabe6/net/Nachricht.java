@@ -26,8 +26,9 @@ public class Nachricht implements Serializable
     public static enum NACHRICHTEN_TYP
     {
         SPIELER_PLUS_MINUS,
-        SPIELER_X_WUERFELT_Y,	// inklusive komplette Figurenübermittlung und evt. wer gewonnen hat
-        
+        SPIELER_X_WUERFELT_Y,	// inklusive komplette Figurenuebermittlung und evt. wer gewonnen hat
+        HABE_FELD_X_GEKLICKT,
+        UNGUELTIGER_ZUG
     }
     
     private String sender;

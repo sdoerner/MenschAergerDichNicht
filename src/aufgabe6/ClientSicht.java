@@ -46,6 +46,9 @@ public class ClientSicht implements Serializable {
 	 * @param theNachricht die zu verarbeitende Nachricht
 	 */
 	public void verarbeiteNachricht(Nachricht theNachricht) {
-		// TODO implementieren
+		switch (theNachricht.getNachrichtenTyp()) {
+		case SPIELER_PLUS_MINUS:
+			
+		}
 	}
 }
