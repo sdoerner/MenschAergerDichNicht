@@ -27,16 +27,14 @@ public class Nachricht implements Serializable
     }
     
     private String sender;
-    private String empfaenger;
     private TreeMap<KEYS, String> data;
     private NACHRICHTEN_TYP nachrichtenTyp;
 
-    public Nachricht(String sender, String empfaenger) throws NullPointerException
+    public Nachricht(String sender) throws NullPointerException
     {
-        if (sender==null || empfaenger==null)
+        if (sender==null)
             throw new NullPointerException();
         this.sender = sender;
-        this.empfaenger = empfaenger;
         data = new TreeMap<KEYS, String>();
     }
 
@@ -45,11 +43,6 @@ public class Nachricht implements Serializable
         return sender;
     }
 
-    public String getEmpfaenger()
-    {
-        return empfaenger;
-    }
-    
     public String getValue(KEYS key)
     {
         return data.get(key);

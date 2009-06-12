@@ -13,20 +13,22 @@ import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
 public class ServerKommunikationsThread implements Runnable
 {
     private Socket socket;
+    private Server server;
     private InputStream is;
     private OutputStream os;
     private boolean abbrechen;
     
-    public ServerKommunikationsThread(Socket socket)
+    public ServerKommunikationsThread(Socket socket, Server server)
     {
         this.abbrechen = false;
         this.socket = socket;
+        this.server = server;
         try{
 //        socket.setKeepAlive(true);
         
         is=this.socket.getInputStream();
         os=this.socket.getOutputStream();
-        Nachricht n = new Nachricht("foo", "bar");
+        Nachricht n = new Nachricht(server.getServerName());
         n.setNachrichtenTyp(NACHRICHTEN_TYP.SERVER_HALLO);
         this.sendeNachricht(n);
 //        sc = new Scanner(is);

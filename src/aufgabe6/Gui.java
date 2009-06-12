@@ -164,7 +164,7 @@ public class Gui implements GuiInterface {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        Server s = new Server(9999);
+                        Server s = new Server(9999, namensFeld.getText());
                         s.lausche();
                     }
 		        }
@@ -203,7 +203,7 @@ public class Gui implements GuiInterface {
                         Client c = Client.getInstance();
                         int index = serverAnsicht.getSelectedIndex();
                         System.out.println(c.getServerInfos().get(index).getIp());
-                        c.verbinde(c.getServerInfos().get(index).getIp());
+                        c.verbinde(c.getServerInfos().get(index).getIp(), namensFeld.getText());
                     }
 		            
 		        }
