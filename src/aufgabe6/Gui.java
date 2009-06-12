@@ -107,6 +107,14 @@ public class Gui implements GuiInterface {
         int index = serverAnsicht.getSelectedIndex();
         System.out.println(c.getServerInfos().get(index).getIp());
         c.verbinde(c.getServerInfos().get(index).getIp(), spielerNamensFeld.getText());
+        
+        this.spielfeld = new GuiSpielfeld();
+        
+        this.spielfeldContainer.add(this.spielfeld);
+        
+        passeSpielfeldAn();
+        
+        System.out.println(this.spielfeld);
 	}
 	
 	private void toggleVerbindenKnopf() {
@@ -148,10 +156,10 @@ public class Gui implements GuiInterface {
 		unterteiler.setDividerSize(5);
 		
 		this.spielfeldContainer  = new JPanel();
-		
-		this.spielfeld = new GuiSpielfeld();
-		
-		spielfeldContainer.add(this.spielfeld);
+//		
+//		this.spielfeld = new GuiSpielfeld();
+//		
+//		spielfeldContainer.add(this.spielfeld);
 		
 		unterteiler.setLeftComponent(spielfeldContainer);
 		
@@ -179,10 +187,7 @@ public class Gui implements GuiInterface {
 			@Override
 			public void mouseClicked(MouseEvent event) {
 				if(event.getClickCount()>1 && verbindenHeisstVerbinden) {
-					Client c = Client.getInstance();
-			        int index = serverAnsicht.getSelectedIndex();
-			        System.out.println(c.getServerInfos().get(index).getIp());
-			        c.verbinde(c.getServerInfos().get(index).getIp(), spielerNamensFeld.getText());
+					verbinde();
 					toggleVerbindenKnopf();
 				}
 			}
@@ -302,7 +307,7 @@ public class Gui implements GuiInterface {
 	@Override
 	public void starteGui() {
 		this.fenster.pack();
-		this.passeSpielfeldAn();
+		//this.passeSpielfeldAn();
 		this.fenster.setVisible(true);	}
 
 	private void passeSpielfeldAn() {
@@ -342,7 +347,10 @@ public class Gui implements GuiInterface {
 					new Point(4,10),new Point(5,10),new Point(6,10),new Point(6,9),new Point(6,8),new Point(6,7),
 					new Point(6,6),new Point(7,6),new Point(8,6),new Point(9,6),new Point(10,6),new Point(10,5),
 					new Point(10,4),new Point(9,4),new Point(8,4),new Point(7,4),new Point(6,4),new Point(6,3),
-					new Point(6,2),new Point(6,1),new Point(6,0),new Point(5,0)
+					new Point(6,2),new Point(6,1),new Point(6,0),new Point(5,0),new Point(5,1),new Point(5,2),
+					new Point(5,3),new Point(5,4),new Point(1,5),new Point(2,5),new Point(3,5), new Point(4,5),
+					new Point(5,6), new Point(5,7),new Point(5,8), new Point(5,9),new Point(6,5), new Point(7,5),
+					new Point(8,5), new Point(9,5)
 			};
 			
 			this.figurenImHaus = new int[]{ 0,0,0,0 };
@@ -364,49 +372,64 @@ public class Gui implements GuiInterface {
 					g2.drawOval(j*laenge+laenge/10, i*laenge+laenge/10, laenge-laenge/5, laenge-laenge/5);			
 				}
 			}
-			for(Figur f: Spielfeld.getInstance().getWahrscheinlichFiguren()){
-				if(f!=null){
-					Color currentColor = berechneFarbe(f.getBesitzer().getSpielernummer()+2);
-					g2.setColor(currentColor.darker().darker());
-					Point position = berechnePosition(f,laenge);
-					g2.fillOval(position.x, position.y, laenge-laenge/3, laenge-laenge/3);
-					g2.setColor(currentColor.darker());
-					g2.fillOval(position.x, position.y, laenge-laenge/2, laenge-laenge/2);
+			ClientSicht sicht = Client.getInstance().getClientRelevanteDaten();
+			for(int i  = 0 ; i< 4; i++){
+				Color currentColor = berechneFarbe(i+2);
+				g2.setColor(currentColor.darker().darker());
+				int amStartZaehler = 0;
+				for(int figur : sicht.getSpielerFiguren()[i]){
+					if(figur > -2){
+						Point position = new Point();
+						if(figur == -1){
+							switch(i){
+							case 0:
+								position.x = 0;
+								position.y = 0;
+								break;
+							case 1:
+								position.x = 9;
+								position.y = 0;
+								break;
+							case 2:
+								position.x = 9;
+								position.y = 9;
+								break;
+							case 3:
+							default:
+								position.x = 0;
+								position.y = 9;
+								break;
+							}
+							switch(amStartZaehler){
+							case 3:
+								position.y++;
+								break;
+							case 1:
+								position.x++;
+								break;
+							case 2:
+								position.x++;
+								position.y++;
+								break;
+							
+							case 0:
+							default:
+								break;
+							}
+							amStartZaehler++;
+						}else{
+							position.x = this.figurenPositionen[figur].y;
+							position.y = this.figurenPositionen[figur].x;
+						}
+						position.x = position.x*laenge+laenge/3;
+						position.y = position.y*laenge+laenge/3;
+						g2.fillOval(position.x, position.y, laenge-laenge/3, laenge-laenge/3);
+						g2.setColor(currentColor.darker());
+						g2.fillOval(position.x, position.y, laenge-laenge/2, laenge-laenge/2);
+					}
 				}
 			}
 			g2.setColor(tmpColor);	
-		}
-
-		private Point berechnePosition(Figur f, int laenge) {
-			Point position = new Point();
-			if(f.istInZiel() || f.getPosition() == -1){
-				position.x = this.figurenPositionen[f.getPosition()].y;
-				position.y = this.figurenPositionen[f.getPosition()].x;
-			}else{
-				switch(f.getBesitzer().getSpielernummer()){
-				case 0:
-					position.x = 0;
-					position.y = 0;
-					break;
-				case 1:
-					position.x = 9;
-					position.y = 0;
-					break;
-				case 2:
-					position.x = 0;
-					position.y = 9;
-					break;
-				case 3:
-					position.x = 9;
-					position.y = 9;
-					break;
-				default:
-					return null;
-				}
-			}
-			position.x = position.x*laenge+laenge/3;
-			position.y = position.y*laenge+laenge/3;
-			return position;
 		}
 
 		private Color berechneFarbe(int i) {
@@ -438,15 +461,57 @@ public class Gui implements GuiInterface {
 		public void mouseClicked(MouseEvent e) {
 			int size = this.getWidth();
 			Point position = new Point(e.getX()*11/size, e.getY()*11/size);
-			for(Figur f: Spielfeld.getInstance().getWahrscheinlichFiguren()){
-				if (f != null) {
-					if (f.istInZiel() || f.getPosition() == -1) {
-						if(figurenPositionen[f.getPosition()].equals(position)){
-							
+			int spielerNummer = Client.getInstance().getClientRelevanteDaten().getMeineNummer();
+			boolean figurExistiert = false;
+			for(int positionFigur: Client.getInstance().getClientRelevanteDaten().getSpielerFiguren()[spielerNummer]){
+				if(positionFigur==-1){
+					switch (spielerNummer) {
+					case 0:
+						if ((position.x == 0 && position.y == 0)
+								|| (position.x == 1 && position.y == 0)
+								|| (position.x == 1 && position.y == 1)
+								|| (position.x == 0 && position.y == 1)) {
+							figurExistiert = true;
 						}
+						break;
+					case 1:
+						if ((position.x == 0 && position.y == 9)
+								|| (position.x == 1 && position.y == 9)
+								|| (position.x == 1 && position.y == 10)
+								|| (position.x == 0 && position.y == 10)) {
+						figurExistiert = true;
+						}
+						break;
+					case 2:
+						if ((position.x == 9 && position.y == 9)
+								|| (position.x == 9 && position.y == 10)
+								|| (position.x == 10 && position.y == 10)
+								|| (position.x == 10 && position.y == 9)) {
+							figurExistiert = true;
+						}
+						break;
+					case 3:
+						if ((position.x == 9 && position.y == 0)
+								|| (position.x == 10 && position.y == 0)
+								|| (position.x == 10 && position.y == 1)
+								|| (position.x == 9 && position.y == 1)) {
+						figurExistiert = true;
+						}
+						break;
+					default:
+						break;
+					}
+				}else{
+					if(position.equals(this.figurenPositionen[positionFigur])){
+						figurExistiert = true;
 					}
 				}
+				if(figurExistiert){
+					// TODO serveraufruf wert: positionFigur
+					break;
+				}
 			}
+				
 		}
 
 		@Override

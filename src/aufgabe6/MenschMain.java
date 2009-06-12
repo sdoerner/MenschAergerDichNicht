@@ -7,7 +7,11 @@ import aufgabe6.net.Server;
 
 public class MenschMain {
 
-	
+	private static Spiel dasSpiel;
+    public static Spiel getDasSpiel()
+    {
+        return dasSpiel;
+    }
     /**
      * initialisiert und startet das Spiel
      * @param args
@@ -18,8 +22,8 @@ public class MenschMain {
 		GuiInterface gui = Gui.getGui();
 		gui.starteGui();
 		
-        //Spiel dasSpiel = new Spiel();
-        //dasSpiel.start();
+        dasSpiel = new Spiel();
+        dasSpiel.start();
     }
 
 }

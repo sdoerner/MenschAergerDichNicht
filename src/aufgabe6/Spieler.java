@@ -34,17 +34,25 @@ public class Spieler {
 	 * @param anzahlSchritte die gewuerfelte Zahl (= Anzahl der zuruecklegbaren Schritte)
 	 * @return ob eine Figur bewegt werden konnte
 	 */
-	public boolean ziehe(int anzahlSchritte) {
-		Thread warte = new WartenThread();
-		try {
-			warte.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+	public boolean ziehe(int figurnummerposition, int anzahlSchritte) {
+//		Thread warte = new WartenThread();
+//		try {
+//			warte.join();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+		Figur figur = null;
+		for (int i=0;i<figuren.size();i++)
+		{
+		    figur = figuren.get(i);
+		    if (figur.getPosition()==figurnummerposition)
+		        break;
 		}
-		int figurNummer = 0;
+		if (figur==null || figurnummerposition!=figur.getPosition())
+		    return false;
 		
-		if (Spielfeld.getInstance().bewegeFigur(this, this.figuren.get(figurNummer).getPosition(), anzahlSchritte)) {
-			this.figuren.get(figurNummer).bewege(anzahlSchritte);
+		if (Spielfeld.getInstance().bewegeFigur(this, figur.getPosition(), anzahlSchritte)) {
+			figur.bewege(anzahlSchritte);
 			return true;
 		} else
 			return false;

@@ -22,9 +22,11 @@ public class ClientSicht implements Serializable {
 	 * initialisiert eine neue Clientview
 	 */
 	public ClientSicht() {
+		this.spielerFiguren = new int[4][4];
 		for (int itSpieler = 0; itSpieler < 4; itSpieler++)
 			Arrays.fill(spielerFiguren[itSpieler], -2);
 		
+		this.spielerName = new String[4];
 		Arrays.fill(spielerName, "");
 	}
 	
@@ -93,5 +95,13 @@ public class ClientSicht implements Serializable {
 		}
 		
 		return retArr;
+	}
+	
+	public int[][] getSpielerFiguren() {
+		return spielerFiguren;
+	}
+	
+	public byte getMeineNummer() {
+		return meineNummer;
 	}
 }

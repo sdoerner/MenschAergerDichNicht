@@ -6,18 +6,25 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Vector;
 
+import aufgabe6.ClientSicht;
+
 public class Client {
 	private Vector<ServerInfo> serverInfos;
 	private String name;
+	private ClientSicht clientRelevanteDaten = null;
+	
     private Client() 
     {
         serverInfos = new Vector<ServerInfo>();
+        this.clientRelevanteDaten = new ClientSicht();
     }
     
     
     
     private static Client instance;
-    public static Client getInstance()
+
+
+	public static Client getInstance()
     {
         if (instance ==null)
             instance = new Client();
@@ -26,7 +33,7 @@ public class Client {
 	
     private void initialisiereKommunikationsThread(Socket socket)
     {
-        ClientKommunikationsThread clientKom = new ClientKommunikationsThread(socket);
+        ClientKommunikationsThread clientKom = new ClientKommunikationsThread(socket, this);
         Thread thread = new Thread(clientKom);
         thread.start();
     }
@@ -81,4 +88,8 @@ public class Client {
         }
         
     }
+    
+    public ClientSicht getClientRelevanteDaten() {
+		return clientRelevanteDaten;
+	}
 }

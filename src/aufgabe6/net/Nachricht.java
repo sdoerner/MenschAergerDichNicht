@@ -18,6 +18,7 @@ public class Nachricht implements Serializable
     {
         SPIELER_NAME,
         SPIELER_NUMMER,
+        FIGUREN_POSITION,
         WUERFELZAHL,
         FIGUREN,
         GEKLICKTES_FELD
@@ -27,7 +28,7 @@ public class Nachricht implements Serializable
     {
         SPIELER_PLUS_MINUS,		// Client <-> Server
         SPIELER_X_WUERFELT_Y,	// Client <- Server inklusive komplette Figurenuebermittlung und evt. wer gewonnen hat
-        HABE_FELD_X_GEKLICKT,	// Client -> Server
+        BEWEGUNGS_AUFFORDERUNG,	// Client -> Server
         UNGUELTIGER_ZUG,		// Client <- Server
         SPIELER_X_HAT_GEWONNEN	// Client <- Server
     }

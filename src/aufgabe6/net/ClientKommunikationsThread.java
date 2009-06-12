@@ -21,14 +21,16 @@ public class ClientKommunikationsThread implements Runnable
     private InputStream input;
     private ObjectOutputStream output;
     private boolean abbrechen;
+    private Client client;
     
     /**
      * Konstruktur, initialisiert Socket und Port
      * @param socket
      */
-    public ClientKommunikationsThread(Socket socket) {
+    public ClientKommunikationsThread(Socket socket, Client client) {
         this.abbrechen = false;
         this.socket = socket;
+        this.client = client;
         try {
 	        input = this.socket.getInputStream();
 	        output = new ObjectOutputStream(this.socket.getOutputStream());
@@ -76,7 +78,9 @@ public class ClientKommunikationsThread implements Runnable
     
     public void sendeBewegungsAufforderung(int x)
     {
-//        Nachricht n = new Nachricht()
+        Nachricht n = new Nachricht(this.client.getName(),NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG);
+        n.setValue(KEYS.FIGUREN_POSITION, ""+x);
+        this.sendNachricht(n);
     }
     
     /**

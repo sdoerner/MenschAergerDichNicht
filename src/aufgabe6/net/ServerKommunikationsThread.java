@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import aufgabe6.MenschMain;
+import aufgabe6.Spielfeld;
 import aufgabe6.net.Nachricht.KEYS;
 import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
 
@@ -53,6 +55,8 @@ public class ServerKommunikationsThread implements Runnable
                     Nachricht n = (Nachricht) ois.readObject();
                     if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
                         System.out.println("received Client hello from " + n.getValue(KEYS.SPIELER_NAME));
+                    if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG)
+                        bearbeiteBewegungsAufforderung(n);
                 }
 
             } catch (Exception e)
@@ -85,5 +89,11 @@ public class ServerKommunikationsThread implements Runnable
         {
             System.err.println("Konnte nicht ");
         }
+    }
+    private void bearbeiteBewegungsAufforderung(Nachricht n)
+    {
+        int position = Integer.parseInt(n.getValue(KEYS.FIGUREN_POSITION));
+        MenschMain.getDasSpiel().setGewaehlteFigurenPosition(position);
+        MenschMain.getDasSpiel().notify();
     }
 }
