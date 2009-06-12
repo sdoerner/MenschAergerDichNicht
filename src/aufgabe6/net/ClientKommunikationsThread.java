@@ -34,7 +34,7 @@ public class ClientKommunikationsThread implements Runnable
         }
         Nachricht n = new Nachricht("Client1");
         n.setNachrichtenTyp(NACHRICHTEN_TYP.CLIENT_HALLO);
-        n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getNamensFeldInhalt());
+        n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getSpielerNamensFeldInhalt());
         this.sendNachricht(n);
     }
 
