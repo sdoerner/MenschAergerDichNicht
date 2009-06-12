@@ -28,8 +28,7 @@ public class ServerKommunikationsThread implements Runnable
         
         is=this.socket.getInputStream();
         os=this.socket.getOutputStream();
-        Nachricht n = new Nachricht(server.getServerName());
-        n.setNachrichtenTyp(NACHRICHTEN_TYP.SERVER_HALLO);
+        Nachricht n = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SERVER_HALLO);
         this.sendeNachricht(n);
 //        sc = new Scanner(is);
         } catch (Exception e)
@@ -87,5 +86,4 @@ public class ServerKommunikationsThread implements Runnable
             System.err.println("Konnte nicht ");
         }
     }
-
 }

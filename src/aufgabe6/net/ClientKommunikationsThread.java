@@ -32,8 +32,7 @@ public class ClientKommunikationsThread implements Runnable
             System.err.println("Konnte auf dem Client einen Kommunikationsthread nicht starten");
             e.printStackTrace();
         }
-        Nachricht n = new Nachricht("Client1");
-        n.setNachrichtenTyp(NACHRICHTEN_TYP.CLIENT_HALLO);
+        Nachricht n = new Nachricht("Client1", NACHRICHTEN_TYP.CLIENT_HALLO);
         n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getSpielerNamensFeldInhalt());
         this.sendNachricht(n);
     }
@@ -69,5 +68,9 @@ public class ClientKommunikationsThread implements Runnable
         } catch (IOException e) {
             System.err.println("Nachricht konnte nicht gesendet werden");
         }
+    }
+    public void sendeBewegungsAufforderung(int x)
+    {
+//        Nachricht n = new Nachricht()
     }
 }
