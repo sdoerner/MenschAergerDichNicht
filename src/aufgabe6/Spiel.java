@@ -5,8 +5,14 @@ import java.util.Vector;
 public class Spiel extends Thread {
 	private static Vector<Spieler> spieler = null;
 	private static Spieler aktuellerSpieler = null;
+	private static int gewaehlteFigurenPosition;
 
-	public Spiel() {
+	public void setGewaehlteFigurenPosition(int gewaehlteFigurenPosition)
+    {
+        Spiel.gewaehlteFigurenPosition = gewaehlteFigurenPosition;
+    }
+
+    public Spiel() {
         spieler = new Vector<Spieler>(4);
 	}
 	
@@ -23,8 +29,14 @@ public class Spiel extends Thread {
 		
 		do {
 			gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
-			this.interrupt();
-			aktuellerSpieler.ziehe(gewuerfelteZahl);
+			try
+            {
+                this.wait();
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+			aktuellerSpieler.ziehe(this.gewaehlteFigurenPosition,gewuerfelteZahl);
 		} while (gewuerfelteZahl == 6);
 	}
 	
@@ -51,7 +63,6 @@ public class Spiel extends Thread {
         				
         				if (gewuerfelteZahl == 6) {
         					itSpieler.kommRaus();
-        					itSpieler.ziehe(6);
         					wuerfelnUndZiehen();
         					break;
         				}
