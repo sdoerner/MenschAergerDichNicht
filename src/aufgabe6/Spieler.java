@@ -111,4 +111,8 @@ public class Spieler {
 			}
 		}
 	}
+	
+	public Vector<Figur> getFiguren() {
+		return figuren;
+	}
 }

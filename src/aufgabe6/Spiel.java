@@ -35,6 +35,9 @@ public class Spiel extends Thread {
     	spieler.add(new Spieler(name, spieler.size(), true));
     }
     
+    /**
+     * Hauptschleife
+     */
     public void spielen() {
 		boolean istSiegerGefunden = false;
         
@@ -62,5 +65,9 @@ public class Spiel extends Thread {
 	        	}
         	}
         }
+    }
+    
+    public ClientSicht toClientView() {
+    	return new ClientSicht(spieler);
     }
 }

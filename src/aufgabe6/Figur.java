@@ -62,12 +62,15 @@ public class Figur {
 	
 	/**
 	 * gibt an, ob die Figur schon im Ziel ist
-	 * @return
+	 * @return ob die Figur im Ziel ist
 	 */
 	public boolean istInZiel() {
 		return this.position > 39;
 	}
 
+	/**
+	 * holt eine Figur auf das Startfeld
+	 */
 	public void aufStart() {
 		this.position = this.besitzer.getEinstiegspunkt();
 	}
