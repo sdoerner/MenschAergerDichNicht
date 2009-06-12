@@ -34,12 +34,13 @@ public class Nachricht implements Serializable
     private TreeMap<KEYS, String> data;
     private NACHRICHTEN_TYP nachrichtenTyp;
 
-    public Nachricht(String sender) throws NullPointerException
+    public Nachricht(String sender, NACHRICHTEN_TYP typ) throws NullPointerException
     {
         if (sender==null)
             throw new NullPointerException();
         this.sender = sender;
         data = new TreeMap<KEYS, String>();
+        this.nachrichtenTyp = typ;
     }
 
     public String getSender()
