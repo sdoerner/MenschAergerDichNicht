@@ -51,9 +51,10 @@ public class Gui implements GuiInterface {
 
 	private JFrame fenster = null;
 	
-	private DefaultListModel serverList = null;
+	private DefaultListModel serverList = new DefaultListModel();
 	
 	private JPanel serverSicht = null;
+	private final JList serverAnsicht = new JList(serverList);
 	
 	private JTree spielerAnsicht = null;
 	
@@ -69,6 +70,12 @@ public class Gui implements GuiInterface {
         return namensFeld.getText();
     }
 
+	private JTextField spielerNamensFeld = null;
+	public String getSpielerNamensFeldInhalt()
+    {
+        return spielerNamensFeld.getText();
+    }
+
     private JTextField ipFeld = null;
 	
 	private JPanel knopfContainerServerAnsicht = null;
@@ -77,9 +84,8 @@ public class Gui implements GuiInterface {
 	
 	private JButton hinzufuegenKnopf = null;
 	
+	private boolean verbindenHeisstVerbinden = true;
 	private JButton verbindeKnopf = null;
-	
-	private JButton trenneKnopf = null;
 	
 	private JTextPane spielNachrichten = null;
 	
@@ -94,6 +100,22 @@ public class Gui implements GuiInterface {
 			Gui.singleTon = new Gui();
 		}
 		return Gui.singleTon;
+	}
+	
+	private void verbinde() {
+		Client c = Client.getInstance();
+        int index = serverAnsicht.getSelectedIndex();
+        System.out.println(c.getServerInfos().get(index).getIp());
+        c.verbinde(c.getServerInfos().get(index).getIp(), spielerNamensFeld.getText());
+	}
+	
+	private void toggleVerbindenKnopf() {
+		if(verbindenHeisstVerbinden) {
+			verbindeKnopf.setText("trennen");
+		} else {
+			verbindeKnopf.setText("verbinden");
+		}
+		verbindenHeisstVerbinden = !verbindenHeisstVerbinden;
 	}
 	
 	private Gui(){
@@ -137,23 +159,37 @@ public class Gui implements GuiInterface {
 		rechtesUnterFenster.setPreferredSize(new Dimension(200,1));
 		
 		this.serverSicht = new JPanel(new BorderLayout());
-		
-		serverList = new DefaultListModel();
-		
-		final JList serverAnsicht = new JList(serverList);
+				
 		serverAnsicht.setLayoutOrientation(JList.VERTICAL);
 		serverAnsicht.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		serverAnsicht.addListSelectionListener(new ListSelectionListener() {
-
 			public void valueChanged(ListSelectionEvent event) {
 				if (event.getFirstIndex() >= 0) {
+					verbindeKnopf.setToolTipText("Verbindet mit dem ausgewählten Server.");
 					verbindeKnopf.setEnabled(true);
 				} else {
+					verbindeKnopf.setToolTipText("Bitte einen Server zum Verbinden auswählen.");
 					verbindeKnopf.setEnabled(false);
 				}
+			}		
+		});
+		
+		serverAnsicht.addMouseListener(new MouseListener(){
+			@Override
+			public void mouseClicked(MouseEvent event) {
+				if(event.getClickCount()>1 && verbindenHeisstVerbinden) {
+					Client c = Client.getInstance();
+			        int index = serverAnsicht.getSelectedIndex();
+			        System.out.println(c.getServerInfos().get(index).getIp());
+			        c.verbinde(c.getServerInfos().get(index).getIp(), spielerNamensFeld.getText());
+					toggleVerbindenKnopf();
+				}
 			}
-			
+			public void mouseEntered(MouseEvent arg0) {}
+			public void mouseExited(MouseEvent arg0) {}
+			public void mousePressed(MouseEvent arg0) {}
+			public void mouseReleased(MouseEvent arg0) {}
 		});
 		
 		this.serverAnsichtsContainer = new JScrollPane(serverAnsicht);
@@ -162,34 +198,43 @@ public class Gui implements GuiInterface {
 		
 		this.knopfContainerServerAnsicht = new JPanel(new GridLayout(2,3));
 		
-		this.namensFeld  = new JTextField("Spielername", NAMENSFELD_MAX_BREITE);
+		this.namensFeld  = new JTextField("Entfernter Server", NAMENSFELD_MAX_BREITE);
 		this.namensFeld.setFont(this.namensFeld.getFont().deriveFont(9.f));
 		this.namensFeld.setEditable(true);
 						
 		this.erstellKnopf = new JButton("erstellen");
-		this.erstellKnopf.setToolTipText("Startet einen Serverprozeß im Hintergrund, der auf Verbindungen wartet.");
+		this.erstellKnopf.setToolTipText("Startet einen Serverprozeß im Hintergrund, der auf Verbindungen wartet.\nDer Name des Servers kommt aus dem Spieler/Server-Feld.");
 		this.erstellKnopf.addActionListener(
 		        new ActionListener()
 		        {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        Server s = new Server(9999, namensFeld.getText());
+                        Server s = new Server(9999, spielerNamensFeld.getText());
                         s.lausche();
                         erstellKnopf.setToolTipText("Im Moment läuft bereits ein Serverprozess.");
                         erstellKnopf.setEnabled(false);
+                        
+                        Client c = Client.getInstance();
+                        Client.ServerInfo si = c.new ServerInfo(spielerNamensFeld.getText(),"127.0.0.1");
+                        Client.getInstance().getServerInfos().add(si);
+                        serverList.addElement(spielerNamensFeld.getText());
+                        
                     }
 		        }
-		);
-		
+        );
+
+		this.spielerNamensFeld = new JTextField("Spieler/Server");
+		this.spielerNamensFeld.setFont(this.spielerNamensFeld.getFont().deriveFont(9.f));
+
+
 		this.namensFeld.setFont(this.namensFeld.getFont().deriveFont(9.f));		
 	    this.ipFeld = new JTextField("IP", IPFELD_MAX_BREITE);
 		this.ipFeld.setFont(this.ipFeld.getFont().deriveFont(9.f));
         this.ipFeld.setEditable(true);
 
         this.hinzufuegenKnopf = new JButton("hinzufügen");
-		this.hinzufuegenKnopf.addActionListener(new ActionListener()
-		{
+		this.hinzufuegenKnopf.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e)
             {
@@ -198,32 +243,28 @@ public class Gui implements GuiInterface {
                 Client.getInstance().getServerInfos().add(si);
                 serverList.addElement(namensFeld.getText());
             }
-		}
-		        );
+		});
 		
 		this.verbindeKnopf = new JButton("verbinden");
 		this.verbindeKnopf.setEnabled(false);
-		this.verbindeKnopf.addActionListener(
-		        new ActionListener()
-		        {
-
-                    @Override
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        Client c = Client.getInstance();
-                        int index = serverAnsicht.getSelectedIndex();
-                        System.out.println(c.getServerInfos().get(index).getIp());
-                        c.verbinde(c.getServerInfos().get(index).getIp(), namensFeld.getText());
-                    }
-		            
-		        }
-		
-		);
+		this.verbindeKnopf.setToolTipText("Bitte einen Server zum Verbinden auswählen.");
+		this.verbindeKnopf.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(verbindenHeisstVerbinden) {
+					verbinde();
+					toggleVerbindenKnopf();
+				} else {
+					//trennen();
+					toggleVerbindenKnopf();
+				}
+			}
+        });
 		
 		this.knopfContainerServerAnsicht.add(this.namensFeld);
 	    this.knopfContainerServerAnsicht.add(this.ipFeld);
 		this.knopfContainerServerAnsicht.add(this.hinzufuegenKnopf);
-		this.knopfContainerServerAnsicht.add(new JLabel());//free space
+		this.knopfContainerServerAnsicht.add(this.spielerNamensFeld);
         this.knopfContainerServerAnsicht.add(this.erstellKnopf);
 		this.knopfContainerServerAnsicht.add(this.verbindeKnopf);
 		
@@ -234,8 +275,6 @@ public class Gui implements GuiInterface {
 		this.wurzelKnotenSpielerAnsicht = new DefaultMutableTreeNode();
 		
 		this.spielerAnsicht = new JTree(this.wurzelKnotenSpielerAnsicht);
-		
-		this.trenneKnopf = new JButton("trennen");
 		
 		this.spielNachrichten = new JTextPane();
 		this.spielNachrichten.setEditable(true);
