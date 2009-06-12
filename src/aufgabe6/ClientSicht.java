@@ -12,6 +12,7 @@ import aufgabe6.net.Nachricht;
  *
  */
 public class ClientSicht implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private int[][] spielerFiguren = null;
 	private String[] spielerName = null;
 	private byte meineNummer = -1;

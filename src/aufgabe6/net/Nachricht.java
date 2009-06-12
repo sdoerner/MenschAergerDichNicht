@@ -17,13 +17,17 @@ public class Nachricht implements Serializable
     public static enum KEYS
     {
         SPIELER_NAME,
-        NACHRICHTEN_TYP
+        SPIELER_NUMMER,
+        WUERFELZAHL,
+        FIGUREN,
+        GEKLICKTES_FELD
     }
     
     public static enum NACHRICHTEN_TYP
     {
-        CLIENT_HALLO, 
-        SERVER_HALLO
+        SPIELER_PLUS_MINUS,
+        SPIELER_X_WUERFELT_Y,	// inklusive komplette Figurenübermittlung und evt. wer gewonnen hat
+        
     }
     
     private String sender;
