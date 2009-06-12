@@ -18,8 +18,8 @@ public class MenschMain {
 		GuiInterface gui = Gui.getGui();
 		gui.starteGui();
 		
-        Spiel dasSpiel = new Spiel();
-        dasSpiel.start();
+        //Spiel dasSpiel = new Spiel();
+        //dasSpiel.start();
     }
 
 }
