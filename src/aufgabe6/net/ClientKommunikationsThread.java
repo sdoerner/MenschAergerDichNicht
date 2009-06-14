@@ -39,7 +39,7 @@ public class ClientKommunikationsThread implements Runnable
             System.err.println("Konnte auf dem Client einen Kommunikationsthread nicht starten");
             e.printStackTrace();
         }
-        Nachricht n = new Nachricht("Client1", NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
+        Nachricht n = new Nachricht(this.client.getName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getSpielerNamensFeldInhalt());
         this.sendNachricht(n);
     }
@@ -98,6 +98,7 @@ public class ClientKommunikationsThread implements Runnable
 			// TODO aktualisiere GUI mit den neuen Figurenwerten
 			// TODO schreibe dies ins Log
     		System.out.println("received Server hello from " + theNachricht.getSender()); 		// DEBUG
+    		System.out.println("Spielernummer: " + theNachricht.getValue(KEYS.SPIELER_NUMMER));
     		break;
     	case SPIELER_X_WUERFELT_Y:
 	    	// Client.getInstance().getClientSicht().verarbeiteNachricht();

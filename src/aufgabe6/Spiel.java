@@ -11,7 +11,7 @@ public class Spiel extends Thread {
     {
         Spiel.gewaehlteFigurenPosition = gewaehlteFigurenPosition;
     }
-
+	
     public Spiel() {
         spieler = new Vector<Spieler>(4);
 	}
@@ -46,10 +46,12 @@ public class Spiel extends Thread {
 	}
 	
     /**
-     * fuege einen neuen Spieler zum Spiel hinzu
+     * fuege einen neuen Spieler zum Spiel hinzu und gibt seinen index zurück
      */
-    public void verbindeSpieler(String name) {
-    	spieler.add(new Spieler(name, spieler.size(), true));
+    public int verbindeSpieler(String name) {
+    	Spieler s = new Spieler(name, spieler.size(), true);
+    	spieler.add(s);
+    	return spieler.indexOf(s);
     }
     
     /**

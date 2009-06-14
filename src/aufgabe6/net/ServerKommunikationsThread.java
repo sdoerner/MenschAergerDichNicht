@@ -34,8 +34,6 @@ public class ServerKommunikationsThread implements Runnable
         is=this.socket.getInputStream();
         os=this.socket.getOutputStream();
         oos = new ObjectOutputStream(os);
-        Nachricht n = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
-        this.sendeNachricht(n);
 //        sc = new Scanner(is);
         } catch (Exception e)
         {
@@ -111,7 +109,12 @@ public class ServerKommunikationsThread implements Runnable
     
     private void bearbeiteSpielerPlusMinus(Nachricht n)
     {
-    	MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME));
+    	int index = MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME));
+    	
+        Nachricht nOut = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
+        nOut.setValue(KEYS.SPIELER_NUMMER, ""+index);
+        this.sendeNachricht(nOut);
+        
         System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
         Gui.getGui().setStartenKnopfZustand(true);
     }
