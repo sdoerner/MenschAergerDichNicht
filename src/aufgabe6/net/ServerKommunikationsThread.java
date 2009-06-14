@@ -57,14 +57,16 @@ public class ServerKommunikationsThread implements Runnable
                 	if (ois==null)
                 		ois = new ObjectInputStream(is);
                     Nachricht n = (Nachricht) ois.readObject();
-                    if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
-                    {
-                    	MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME));
-                        System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
-                    }
-                    if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG)
-                        bearbeiteBewegungsAufforderung(n);
-                }
+					switch (n.getNachrichtenTyp())
+					{
+					case SPIELER_PLUS_MINUS:
+						bearbeiteSpielerPlusMinus(n);
+						break;
+					case BEWEGUNGS_AUFFORDERUNG:
+						bearbeiteBewegungsAufforderung(n);
+						break;
+					}
+				}
 
             } catch (Exception e)
             {
@@ -104,5 +106,12 @@ public class ServerKommunikationsThread implements Runnable
         {
         	MenschMain.getDasSpiel().notify();
         }
+    }
+    
+    private void bearbeiteSpielerPlusMinus(Nachricht n)
+    {
+    	MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME));
+        System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
+        
     }
 }
