@@ -41,6 +41,9 @@ public class ServerKommunikationsThread implements Runnable
         }
         
     }
+    
+    
+    //--------------------------  Empfangs-Teil -------------------------------------//
 
     @Override
     public void run()
@@ -75,28 +78,8 @@ public class ServerKommunikationsThread implements Runnable
         }
     }
     
-    public void sendeNachricht(Nachricht n)
-    {
-        try{
-        oos.writeObject(n);
-        oos.flush();
-        }
-        catch (IOException e){
-            System.err.println("Fehler beim Senden der Nachricht.");
-        }
-    }
+
     
-    public void sendString(String s)
-    {
-        try
-        {
-        os.write(s.getBytes());
-        }
-        catch (IOException e)
-        {
-            System.err.println("Konnte nicht ");
-        }
-    }
     private void bearbeiteBewegungsAufforderung(Nachricht n)
     {
         int position = Integer.parseInt(n.getValue(KEYS.FIGUREN_POSITION));
@@ -109,7 +92,7 @@ public class ServerKommunikationsThread implements Runnable
     
     private void bearbeiteSpielerPlusMinus(Nachricht n)
     {
-    	int index = MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME));
+    	int index = MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME),this);
     	
         Nachricht nOut = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         nOut.setValue(KEYS.SPIELER_NUMMER, ""+index);
@@ -117,5 +100,25 @@ public class ServerKommunikationsThread implements Runnable
         
         System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
         Gui.getGui().setStartenKnopfZustand(true);
+    }
+    
+    
+    //---------------------------------  sende-Teil ------------------------------------//
+    
+    public void sendeNachricht(Nachricht n)
+    {
+        try{
+        oos.writeObject(n);
+        oos.flush();
+        }
+        catch (IOException e){
+            System.err.println("Fehler beim Senden der Nachricht.");
+        }
+    }
+    
+    public void sendeZugUngueltig()
+    {
+    		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.UNGUELTIGER_ZUG);
+            sendeNachricht(n);
     }
 }

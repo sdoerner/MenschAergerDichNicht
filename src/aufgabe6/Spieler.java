@@ -2,6 +2,8 @@ package aufgabe6;
 
 import java.util.Vector;
 
+import aufgabe6.net.ServerKommunikationsThread;
+
 /**
  * Spieler repraesentiert einen der maximal 4 Spieler, die mitspielen
  * @author rainer
@@ -13,6 +15,7 @@ public class Spieler {
 	private int spielerNummer = -1;
 	private String name = null;
 	private boolean isNetwork = false;
+	private ServerKommunikationsThread serverKommunikationsThread;
 	
 	/**
 	 * Konstruktur, der den Einstiegspunkt setzt und die Figuren initialisiert
@@ -122,5 +125,15 @@ public class Spieler {
 	
 	public Vector<Figur> getFiguren() {
 		return figuren;
+	}
+
+	public void setServerKommunikationsThread(ServerKommunikationsThread serverKommunikationsThread)
+	{
+		this.serverKommunikationsThread = serverKommunikationsThread;
+	}
+
+	public ServerKommunikationsThread getServerKommunikationsThread()
+	{
+		return serverKommunikationsThread;
 	}
 }

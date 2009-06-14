@@ -2,14 +2,16 @@ package aufgabe6;
 
 import java.util.Vector;
 
+import aufgabe6.net.ServerKommunikationsThread;
+
 public class Spiel extends Thread {
 	private static Vector<Spieler> spieler = null;
 	private static Spieler aktuellerSpieler = null;
-	private static int gewaehlteFigurenPosition;
+	private int gewaehlteFigurenPosition;
 
 	public void setGewaehlteFigurenPosition(int gewaehlteFigurenPosition)
     {
-        Spiel.gewaehlteFigurenPosition = gewaehlteFigurenPosition;
+        this.gewaehlteFigurenPosition = gewaehlteFigurenPosition;
     }
 	
     public Spiel() {
@@ -30,26 +32,39 @@ public class Spiel extends Thread {
 		
 		do {
 			gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
-			try
-            {
-			     synchronized(this)
-			     {
-			    	 this.wait();
-			     }
-            } catch (InterruptedException e)
-            {
-                e.printStackTrace();
-            }
-            System.out.println("es geht weiter mit figur" + this.gewaehlteFigurenPosition);
-			aktuellerSpieler.ziehe(this.gewaehlteFigurenPosition,gewuerfelteZahl);
-		} while (gewuerfelteZahl == 6);
+			//TODO: Clients über das Würfelergebnis und den letzten Zug informieren, damit der, der dran ist, setzen kann
+			boolean zugErfolgreich = false;
+			while (!zugErfolgreich)
+			{
+				try
+				{
+					synchronized (this)
+					{
+						this.wait();
+					}
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+				System.out.println("es geht weiter mit figur"
+						+ this.gewaehlteFigurenPosition);
+				zugErfolgreich = !aktuellerSpieler.ziehe(
+						this.gewaehlteFigurenPosition, gewuerfelteZahl);
+				if (!zugErfolgreich)
+					aktuellerSpieler.getServerKommunikationsThread()
+							.sendeZugUngueltig();
+			}
+		}
+		while (gewuerfelteZahl == 6);
 	}
 	
     /**
      * fuege einen neuen Spieler zum Spiel hinzu und gibt seinen index zurück
      */
-    public int verbindeSpieler(String name) {
+    public int verbindeSpieler(String name, ServerKommunikationsThread thread) {
     	Spieler s = new Spieler(name, spieler.size(), true);
+    	s.setServerKommunikationsThread(thread);
     	spieler.add(s);
     	return spieler.indexOf(s);
     }

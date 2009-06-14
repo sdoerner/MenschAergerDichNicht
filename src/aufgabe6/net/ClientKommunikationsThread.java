@@ -41,7 +41,7 @@ public class ClientKommunikationsThread implements Runnable
         }
         Nachricht n = new Nachricht(this.client.getName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getSpielerNamensFeldInhalt());
-        this.sendNachricht(n);
+        this.sendeNachricht(n);
     }
 
     /**
@@ -69,7 +69,7 @@ public class ClientKommunikationsThread implements Runnable
      * sendet eine Nachricht
      * @param theNachricht die zu sendende Nachricht
      */
-    public void sendNachricht(Nachricht theNachricht) {
+    public void sendeNachricht(Nachricht theNachricht) {
         try {
         	output.writeObject(theNachricht);
         	output.flush();
@@ -84,7 +84,7 @@ public class ClientKommunikationsThread implements Runnable
         n.setValue(KEYS.FIGUREN_POSITION, ""+x);
         System.out.println("new Value: "+ n.getValue(KEYS.FIGUREN_POSITION));
         System.out.println(n.getSender());
-        this.sendNachricht(n);
+        this.sendeNachricht(n);
     }
     
     /**
