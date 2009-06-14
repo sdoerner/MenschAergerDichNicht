@@ -58,7 +58,10 @@ public class ServerKommunikationsThread implements Runnable
                 		ois = new ObjectInputStream(is);
                     Nachricht n = (Nachricht) ois.readObject();
                     if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
-                        System.out.println("received Client hello from " + n.getValue(KEYS.SPIELER_NAME));
+                    {
+                    	MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME));
+                        System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
+                    }
                     if (n.getNachrichtenTyp()==NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG)
                         bearbeiteBewegungsAufforderung(n);
                 }

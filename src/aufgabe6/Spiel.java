@@ -19,6 +19,7 @@ public class Spiel extends Thread {
 	@Override
 	public void run() {
 		System.out.println("xxx");
+		this.spielen();
 	}
 
 	/**

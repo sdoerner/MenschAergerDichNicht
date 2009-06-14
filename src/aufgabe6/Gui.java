@@ -20,13 +20,12 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.JList;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
@@ -221,12 +220,13 @@ public class Gui implements GuiInterface {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                    	if (ichBinDerServer)
+                    	if (ichBinDerServer)//ich bin host und habe "Spiel starten" geklickt
                     	{
+                    		MenschMain.getDasSpiel().start();
                     		Client.getInstance().getClientKommunikationsThread().sendeBewegungsAufforderung(5);
                     		erstellKnopf.setEnabled(false);
                     	}
-                    	else
+                    	else //"Spiel erstellen geklickt"
                     	{
                     		Server s = new Server(9999, spielerNamensFeld.getText());
                     		s.lausche();

@@ -23,7 +23,6 @@ public class MenschMain {
 		gui.starteGui();
 		
         dasSpiel = new Spiel();
-        dasSpiel.start();
     }
 
 }
