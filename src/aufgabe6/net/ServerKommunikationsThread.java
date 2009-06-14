@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import aufgabe6.Gui;
 import aufgabe6.MenschMain;
 import aufgabe6.Spielfeld;
 import aufgabe6.net.Nachricht.KEYS;
@@ -112,6 +113,6 @@ public class ServerKommunikationsThread implements Runnable
     {
     	MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME));
         System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
-        
+        Gui.getGui().setStartenKnopfZustand(true);
     }
 }

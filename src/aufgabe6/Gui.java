@@ -118,7 +118,7 @@ public class Gui implements GuiInterface {
         System.out.println(this.spielfeld);
 	}
 	
-	private void setStartenKnopfZustand(boolean wirKoennenStarten)
+	public void setStartenKnopfZustand(boolean wirKoennenStarten)
 	{
 		if (!ichBinDerServer)
 			return;
@@ -243,10 +243,9 @@ public class Gui implements GuiInterface {
                     		Server s = new Server(9999, spielerNamensFeld.getText());
                     		s.lausche();
                     		erstellKnopf.setText("Spiel starten");
-                    		setStartenKnopfZustand(false);
-
-                        
                     		ichBinDerServer = true;
+                    		setStartenKnopfZustand(false);
+                    		
                     		Client c = Client.getInstance();
                     		Client.ServerInfo si = c.new ServerInfo(spielerNamensFeld.getText(),"127.0.0.1");
                     		Client.getInstance().getServerInfos().add(si);
