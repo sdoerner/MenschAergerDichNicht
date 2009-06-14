@@ -113,13 +113,25 @@ public class Gui implements GuiInterface {
         this.spielfeldContainer.add(this.spielfeld);
         
         passeSpielfeldAn();
-        if (ichBinDerServer)
-        {
-        	this.erstellKnopf.setText("Spiel starten");
-        	this.erstellKnopf.setEnabled(true);
-        }
+
         
         System.out.println(this.spielfeld);
+	}
+	
+	private void setStartenKnopfZustand(boolean wirKoennenStarten)
+	{
+		if (!ichBinDerServer)
+			return;
+        if (wirKoennenStarten)
+        {
+        	this.erstellKnopf.setToolTipText("Das Spiel starten.");
+        	this.erstellKnopf.setEnabled(true);
+        }
+        else
+        {
+    		this.erstellKnopf.setToolTipText("Wir haben noch keine Spieler.");
+        	this.erstellKnopf.setEnabled(false);
+        }
 	}
 	
 	private void toggleVerbindenKnopf() {
@@ -230,8 +242,9 @@ public class Gui implements GuiInterface {
                     	{
                     		Server s = new Server(9999, spielerNamensFeld.getText());
                     		s.lausche();
-                    		erstellKnopf.setToolTipText("Im Moment läuft bereits ein Serverprozess.");
-                    		erstellKnopf.setEnabled(false);
+                    		erstellKnopf.setText("Spiel starten");
+                    		setStartenKnopfZustand(false);
+
                         
                     		ichBinDerServer = true;
                     		Client c = Client.getInstance();
