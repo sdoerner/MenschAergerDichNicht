@@ -98,6 +98,12 @@ public class Spiel extends Thread {
 	        	}
         	}
         }
+        //benachrichtige alle Clients ueber das Spielende 
+        int indexGewinner = spieler.indexOf(aktuellerSpieler);
+        for (Spieler itSpieler: spieler)
+        {
+        	itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(indexGewinner);
+        }
     }
     
     public ClientSicht toClientView() {

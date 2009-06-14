@@ -121,4 +121,11 @@ public class ServerKommunikationsThread implements Runnable
     		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.UNGUELTIGER_ZUG);
             sendeNachricht(n);
     }
+    
+    public void sendeSpielerHatGewonnen(int spielerIndex)
+    {
+		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.SPIELER_X_HAT_GEWONNEN);
+		n.setValue(KEYS.SPIELER_NUMMER, ""+spielerIndex);
+        sendeNachricht(n);
+    }
 }
