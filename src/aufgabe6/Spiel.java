@@ -31,7 +31,10 @@ public class Spiel extends Thread {
 			gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
 			try
             {
-                this.wait();
+			     synchronized(this)
+			     {
+			    	 this.wait();
+			     }
             } catch (InterruptedException e)
             {
                 e.printStackTrace();

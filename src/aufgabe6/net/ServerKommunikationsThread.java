@@ -97,6 +97,9 @@ public class ServerKommunikationsThread implements Runnable
     {
         int position = Integer.parseInt(n.getValue(KEYS.FIGUREN_POSITION));
         MenschMain.getDasSpiel().setGewaehlteFigurenPosition(position);
-        MenschMain.getDasSpiel().notify();
+        synchronized(MenschMain.getDasSpiel())
+        {
+        	MenschMain.getDasSpiel().notify();
+        }
     }
 }
