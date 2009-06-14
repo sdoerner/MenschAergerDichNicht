@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.Socket;
 
 import aufgabe6.Gui;
 import aufgabe6.net.Nachricht.KEYS;
 import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
 
+
+/**
+ * regelt die clientseitige Kommunikation
+ *
+ */
 public class ClientKommunikationsThread implements Runnable
 {
     private Socket socket;
@@ -51,8 +55,8 @@ public class ClientKommunikationsThread implements Runnable
                 	if (ois==null)
                 		ois = new ObjectInputStream(input);
                     Nachricht newNachricht = (Nachricht)ois.readObject();
-                    if (newNachricht.getNachrichtenTyp()==NACHRICHTEN_TYP.SPIELER_PLUS_MINUS)
-                        System.out.println("received Server Hello from "+newNachricht.getSender());
+                    
+                    verarbeiteNachricht(newNachricht);
                 }
             } catch (Exception e) {
                 System.err.println("Fehler beim Lesen einer Nachricht");
@@ -73,6 +77,7 @@ public class ClientKommunikationsThread implements Runnable
             System.err.println("Nachricht konnte nicht gesendet werden");
         }
     }
+    
     public void sendeBewegungsAufforderung(int x)
     {
         Nachricht n = new Nachricht(this.client.getName(),NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG);
@@ -80,5 +85,31 @@ public class ClientKommunikationsThread implements Runnable
         System.out.println("new Value: "+ n.getValue(KEYS.FIGUREN_POSITION));
         System.out.println(n.getSender());
         this.sendNachricht(n);
+    }
+    
+    /**
+     * leitet die Nachricht an alle wichtigen Instanzen weiter und schreibt ins Log
+     * @param theNachricht die zu verarbeitende Nachricht
+     */
+    private void verarbeiteNachricht(Nachricht theNachricht) {
+    	switch (theNachricht.getNachrichtenTyp()) {
+    	case SPIELER_PLUS_MINUS:
+    		// Client.getInstance().getClientSicht().verarbeiteNachricht();
+			// TODO aktualisiere GUI mit den neuen Figurenwerten
+			// TODO schreibe dies ins Log
+    		System.out.println("received Server hello from " + theNachricht.getSender()); 		// DEBUG
+    		break;
+    	case SPIELER_X_WUERFELT_Y:
+	    	// Client.getInstance().getClientSicht().verarbeiteNachricht();
+			// TODO aktualisiere GUI mit den neuen Figurenwerten
+			// TODO schreibe dies ins Log
+    		break;
+    	case UNGUELTIGER_ZUG:
+    		// TODO fuehre letzte Operation nochmal aus (wenn ich selbst zuletzt dran gewesen, nochmal Klick erforderlich, ansonsten warten)
+    		// TODO schreibe dies ins Log
+    		break;
+    	case SPIELER_X_HAT_GEWONNEN:
+			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus und schreibe das ins Log
+    	}
     }
 }

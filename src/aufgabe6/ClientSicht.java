@@ -7,7 +7,8 @@ import java.util.Vector;
 import aufgabe6.net.Nachricht;
 
 /**
- * beinhaltet die Informationen ueber das Spiel, die der Client vom Server erhaelt
+ * beinhaltet die Informationen ueber das Spiel, die für den Client relevant sind.
+ * kann vom Server erstellt und dem Client übersendet werden, damit dieser den aktuellen Spielstand kennt
  * @author rainer
  *
  */
@@ -39,7 +40,7 @@ public class ClientSicht implements Serializable {
 				for (int itFigur = 0; itFigur < 4; itFigur++)
 					spielerFiguren[itSpieler][itFigur] = theSpieler.get(itSpieler).getFiguren().get(itFigur).getPosition();
 			} else
-				Arrays.fill(spielerFiguren[itSpieler], -1);
+				Arrays.fill(spielerFiguren[itSpieler], -2);
 		}
 	}
 	
@@ -50,8 +51,50 @@ public class ClientSicht implements Serializable {
 	public void verarbeiteNachricht(Nachricht theNachricht) {
 		switch (theNachricht.getNachrichtenTyp()) {
 		case SPIELER_PLUS_MINUS:
+			String derName = theNachricht.getValue(Nachricht.KEYS.SPIELER_NAME);
+			Byte dieNummer = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.SPIELER_NUMMER));
 			
+			if (dieNummer < 0) {		// Spieler soll geloescht werden
+				this.spielerName[-dieNummer] = "";
+				Arrays.fill(this.spielerFiguren[-dieNummer], -2);
+			} else {					// Spieler soll hinzugefuegt werden
+				if (this.meineNummer == -1)
+					this.meineNummer = dieNummer;
+				this.spielerName[dieNummer] = derName;
+			}
+			break;
+		case SPIELER_X_WUERFELT_Y:
+			//byte dieSpielerNummer = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.SPIELER_NUMMER));
+			//byte wuerfelZahl = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.WUERFELZAHL));
+			String nachrichtFiguren = theNachricht.getValue(Nachricht.KEYS.FIGUREN);
+			
+			this.spielerFiguren = figurenFromString(nachrichtFiguren);
+			break;
 		}
+	}
+	
+	public String toString() {
+		String retString = "";
+		
+		for (int i = 0; i < 4; i++)
+			retString += spielerFiguren[i] + ",";
+			
+		return retString;
+	}
+	
+	private int[][] figurenFromString(String theString) {
+		int[][] retArr = new int[4][4];
+		
+		String[] splitString = theString.split(";");
+		
+		for (int i = 0; i < splitString.length - 1; i++) {
+			String[] splitString2 = splitString[i].split(",");
+			
+			for (int j = 0; j < splitString2.length; j++)
+				retArr[i][j] = Integer.parseInt(splitString2[j]);
+		}
+		
+		return retArr;
 	}
 	
 	public int[][] getSpielerFiguren() {

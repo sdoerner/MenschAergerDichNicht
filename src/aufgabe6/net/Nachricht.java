@@ -26,11 +26,11 @@ public class Nachricht implements Serializable
     
     public static enum NACHRICHTEN_TYP
     {
-        SPIELER_PLUS_MINUS,
-        SPIELER_X_WUERFELT_Y,	// inklusive komplette Figurenuebermittlung und evt. wer gewonnen hat
-        BEWEGUNGS_AUFFORDERUNG,
-        HABE_FELD_X_GEKLICKT,
-        UNGUELTIGER_ZUG
+        SPIELER_PLUS_MINUS,		// Client <-> Server
+        SPIELER_X_WUERFELT_Y,	// Client <- Server inklusive komplette Figurenuebermittlung und evt. wer gewonnen hat
+        BEWEGUNGS_AUFFORDERUNG,	// Client -> Server
+        UNGUELTIGER_ZUG,		// Client <- Server
+        SPIELER_X_HAT_GEWONNEN	// Client <- Server
     }
     
     private String sender;
@@ -69,5 +69,22 @@ public class Nachricht implements Serializable
     public NACHRICHTEN_TYP getNachrichtenTyp()
     {
         return nachrichtenTyp;
+    }
+    
+    public String getLogMessage() {
+    	switch (this.nachrichtenTyp) {
+    	case SPIELER_X_HAT_GEWONNEN:
+    		return this.getValue(KEYS.SPIELER_NAME) + " hat gewonnen!";
+    	case SPIELER_X_WUERFELT_Y:
+    		return this.getValue(KEYS.SPIELER_NAME) + " hat eine " + this.getValue(KEYS.WUERFELZAHL) + " gewuerfelt.";
+    	case UNGUELTIGER_ZUG:
+    		return "Der versuchte Zug ist ungueltig, " + this.getValue(KEYS.SPIELER_NAME) + " muss eine andere Figur waehlen";
+    	case SPIELER_PLUS_MINUS:
+    		if (Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER)) < 0)
+    			return this.getValue(KEYS.SPIELER_NUMMER) + " hat das Spiel verlassen.";
+    		else
+    			return this.getValue(KEYS.SPIELER_NUMMER) + " ist dem Spiel beigetreten.";
+    	default: return null;
+    	}
     }
 }
