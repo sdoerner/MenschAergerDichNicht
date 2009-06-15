@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,6 +24,9 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
+import javax.swing.JTextArea;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
@@ -86,8 +90,9 @@ public class Gui implements GuiInterface {
 	
 	private boolean verbindenHeisstVerbinden = true;
 	private JButton verbindeKnopf = null;
-	
-	private JTextPane spielNachrichten = null;
+
+	private JScrollPane nachrichtenContainer = null;
+	private JTextArea spielNachrichten = null;
 	
 	private GuiSpielfeld spielfeld = null;
 
@@ -132,6 +137,34 @@ public class Gui implements GuiInterface {
     		this.erstellKnopf.setToolTipText("Wir haben noch keine Spieler.");
         	this.erstellKnopf.setEnabled(false);
         }
+	}
+	
+	public void appendToTextPane(String s) {
+		spielNachrichten.setText(spielNachrichten.getText()+"\n");
+		scrollToEnd();
+	}
+	
+	private void scrollToEnd(){
+	    SwingUtilities.invokeLater(new Runnable(){
+	        public void run(){
+	            if (isAdjusting()){
+	                return;
+	            }
+
+	            int height = spielNachrichten.getHeight();
+	            spielNachrichten.scrollRectToVisible(new Rectangle(0, height - 1,1, height));
+	        }
+	    });
+	}
+
+	private boolean isAdjusting(){
+	    JScrollBar scrollBar = nachrichtenContainer.getVerticalScrollBar();
+
+	    if (scrollBar != null && scrollBar.getValueIsAdjusting()){
+	        return true;
+	    }
+
+	    return false;
 	}
 	
 	private void toggleVerbindenKnopf() {
@@ -307,10 +340,10 @@ public class Gui implements GuiInterface {
 		
 		this.spielerAnsicht = new JTree(this.wurzelKnotenSpielerAnsicht);
 		
-		this.spielNachrichten = new JTextPane();
-		this.spielNachrichten.setEditable(true);
+		this.spielNachrichten = new JTextArea();
+		this.spielNachrichten.setEditable(false);
 		
-		JScrollPane nachrichtenContainer = new JScrollPane(this.spielNachrichten);
+		nachrichtenContainer = new JScrollPane(this.spielNachrichten);
 		
 		rechtesUnterFenster.add(nachrichtenContainer, BorderLayout.CENTER);
 		

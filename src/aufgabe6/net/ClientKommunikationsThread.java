@@ -112,5 +112,13 @@ public class ClientKommunikationsThread implements Runnable
     	case SPIELER_X_HAT_GEWONNEN:
 			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus und schreibe das ins Log
     	}
+    	
+    	// Anzeigen der Nachrichten im TextPane "spielNachrichten" in der GUI
+    	String msg = theNachricht.getLogMessage();
+    	if (msg != null) {
+    		for(int i=0;i<50;i++) {
+    			Gui.getGui().appendToTextPane(msg+" "+i);
+    		}
+    	}
     }
 }
