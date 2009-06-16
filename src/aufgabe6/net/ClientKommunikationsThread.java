@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 import aufgabe6.Gui;
 import aufgabe6.net.Nachricht.KEYS;
 import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
@@ -49,7 +51,7 @@ public class ClientKommunikationsThread implements Runnable
      */
     @Override
     public void run() {
-        while (!this.abbrechen) {
+        while (!this.abbrechen && socket.isConnected()) {
             try {
                 if (input.available() > 0) {
                 	if (ois==null)
@@ -66,7 +68,16 @@ public class ClientKommunikationsThread implements Runnable
                 e.printStackTrace();
             }
         }
-    }
+		try
+		{
+			ois.close();
+			socket.close();
+			aufgabe6.Gui.getGui().entferneSpielfeld();
+			
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+	}
     
     /**
      * sendet eine Nachricht
@@ -110,8 +121,13 @@ public class ClientKommunikationsThread implements Runnable
     private void verarbeiteNachricht(Nachricht theNachricht) {
     	switch (theNachricht.getNachrichtenTyp()) {
     	case SPIELER_PLUS_MINUS:
-    		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
-    		Gui.getGui().repaintSpielfeld();
+    		if (theNachricht.getValue(KEYS.FIGUREN)!=null)
+    		{
+    			Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
+    			Gui.getGui().repaintSpielfeld();
+    		}
+    		else
+    			this.abbrechen = true;
     		break;
     	case SPIELER_X_WUERFELT_Y:
     		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
@@ -124,6 +140,8 @@ public class ClientKommunikationsThread implements Runnable
     		break;
     	case SPIELER_X_HAT_GEWONNEN:
     		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
+    		JOptionPane.showMessageDialog(null, theNachricht.getLogMessage(), "Mensch aergere dich nicht : Spielende", JOptionPane.INFORMATION_MESSAGE);
+    		this.sendeTrennen();
 			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus
     	}
     }

@@ -105,36 +105,36 @@ public class Spiel extends Thread {
         
         while (!istSiegerGefunden) {
         	for (Spieler itSpieler : spieler) {
-        		if (itSpieler != null) {
-	        		aktuellerSpieler = itSpieler;
-	        		
-	        		if (!itSpieler.istDraussen()) {				// hat der Spieler schon eine Figur auf dem Spielfeld?
-	        			for (int i = 0; i < 3; i++) {			// drei mal wuerfeln, um evt. raus zu kommen
-	        				int gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
-	        				
-	        				Gui.getGui().appendToTextPane(aktuellerSpieler.getName() + " hat eine " + gewuerfelteZahl + " gewuerfelt.");
-	        				
-	        				if (gewuerfelteZahl == 6) {
-	        					itSpieler.kommRaus();
-	        					wuerfelnUndZiehen();
-	        					break;
-	        				}
-	        			}
-	        		} else
-	        			wuerfelnUndZiehen();
-	        		
-		        	if (itSpieler.hatGewonnen()) {
-		        		istSiegerGefunden = true;
-		        		break;
-		        	}
+        		if (itSpieler==null)
+        			continue;
+        		aktuellerSpieler = itSpieler;
+        		
+        		if (!itSpieler.istDraussen()) {				// hat der Spieler schon eine Figur auf dem Spielfeld?
+        			for (int i = 0; i < 3; i++) {			// drei mal wuerfeln, um evt. raus zu kommen
+        				int gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
+        			
+        				Gui.getGui().appendToTextPane(aktuellerSpieler.getName() + " hat eine " + gewuerfelteZahl + " gewuerfelt.");
+        				
+        				if (gewuerfelteZahl == 6) {
+        					itSpieler.kommRaus();
+        					wuerfelnUndZiehen();
+        					break;
+        				}
+        			}
+        		} else
+        			wuerfelnUndZiehen();
+        		
+	        	if (itSpieler.hatGewonnen()) {
+	        		istSiegerGefunden = true;
+	        		break;
 	        	}
 	        }
         }
         //benachrichtige alle Clients ueber das Spielende 
-        int indexGewinner = aktuellerSpieler.getSpielernummer();
+        String nameGewinner = aktuellerSpieler.getName();
         for (Spieler itSpieler: spieler)
         	if (itSpieler != null)
-        		itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(indexGewinner);
+        		itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(nameGewinner);
     }
     
     /**

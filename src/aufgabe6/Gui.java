@@ -355,6 +355,15 @@ public class Gui implements GuiInterface {
 		this.spielfeldContainer.validate();	
 	}
 	
+	public void entferneSpielfeld()
+	{
+		spielfeld = null;
+		spielfeldContainer.removeAll();
+		spielfeldContainer.validate();
+		spielfeldContainer.repaint();
+		toggleVerbindenKnopf();
+	}
+	
 	@SuppressWarnings({ "serial" })
 	private class GuiSpielfeld extends JPanel implements MouseListener{
 		private byte [][] feld = null;
@@ -501,7 +510,7 @@ public class Gui implements GuiInterface {
 			if (Client.getInstance().getClientRelevanteDaten().istSpielGestartet()) {
 				int size = this.getWidth();
 				Point position = new Point(e.getX()*11/size, e.getY()*11/size);
-				System.out.println("clickPosition: " + position);
+				position.setLocation(position.y, position.x);
 				int spielerNummer = Client.getInstance().getClientRelevanteDaten().getMeineNummer();
 				boolean figurExistiert = false;
 				for(int positionFigur: Client.getInstance().getClientRelevanteDaten().getSpielerFiguren()[spielerNummer]){

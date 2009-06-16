@@ -44,7 +44,7 @@ public class Client {
             instance = new Client();
         return instance;
     }
-	
+
     private void initialisiereKommunikationsThread(Socket socket)
     {
         clientKommunikationsThread = new ClientKommunikationsThread(socket, this);
