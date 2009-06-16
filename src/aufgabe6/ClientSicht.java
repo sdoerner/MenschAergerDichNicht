@@ -24,10 +24,6 @@ public class ClientSicht implements Serializable {
 		return istSpielGestartet;
 	}
 
-	public void setIstSpielGestartet(boolean istSpielGestartet) {
-		this.istSpielGestartet = istSpielGestartet;
-	}
-
 	/**
 	 * initialisiert eine neue Clientview
 	 */
@@ -91,10 +87,14 @@ public class ClientSicht implements Serializable {
 			break;
 		case SPIELER_X_WUERFELT_Y:
 			//byte dieSpielerNummer = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.SPIELER_NUMMER));
-			//byte wuerfelZahl = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.WUERFELZAHL));
+			//byte wuerfelZahl = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.WUERFELZAHL))
 			String nachrichtFiguren = theNachricht.getValue(Nachricht.KEYS.FIGUREN);
-			
-			this.spielerFiguren = figurenFromString(nachrichtFiguren);
+			if (nachrichtFiguren == null) {
+				this.istSpielGestartet = true;
+			} else {
+				System.out.println(nachrichtFiguren);
+				this.spielerFiguren = figurenFromString(nachrichtFiguren);
+			}
 			break;
 		}
 	}
