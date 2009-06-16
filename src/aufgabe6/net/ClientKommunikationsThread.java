@@ -74,7 +74,9 @@ public class ClientKommunikationsThread implements Runnable
 			socket.close();
 			aufgabe6.Gui.getGui().entferneSpielfeld();
 			
-		}catch (IOException e){}
+		} catch (IOException e){
+			e.printStackTrace();
+		}
 	}
     
     /**
@@ -126,11 +128,10 @@ public class ClientKommunikationsThread implements Runnable
     		}
     		else
     			this.abbrechen = true;
-    		// TODO aktualisiere GUI mit den neuen Figurenwerten
     		break;
     	case SPIELER_X_WUERFELT_Y:
     		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
-			// TODO aktualisiere GUI mit den neuen Figurenwerten
+    		Gui.getGui().repaintSpielfeld();
     		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
     		break;
     	case UNGUELTIGER_ZUG:

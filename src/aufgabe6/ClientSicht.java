@@ -19,13 +19,11 @@ public class ClientSicht implements Serializable {
 	private String[] spielerName = null;
 	private byte meineNummer = -1;
 	private boolean istSpielGestartet = false;
+	private byte aktuellerSpieler = -1;
+	private byte letzteWuerfelZahl = -1;
 	
 	public boolean istSpielGestartet() {
 		return istSpielGestartet;
-	}
-
-	public void setIstSpielGestartet(boolean istSpielGestartet) {
-		this.istSpielGestartet = istSpielGestartet;
 	}
 
 	/**
@@ -91,8 +89,13 @@ public class ClientSicht implements Serializable {
 			break;
 		case SPIELER_X_WUERFELT_Y:
 			//byte dieSpielerNummer = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.SPIELER_NUMMER));
-			//byte wuerfelZahl = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.WUERFELZAHL));
+			//byte wuerfelZahl = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.WUERFELZAHL))
+			aktuellerSpieler = Byte.parseByte(theNachricht.getValue(KEYS.SPIELER_NUMMER));
+			letzteWuerfelZahl = Byte.parseByte(theNachricht.getValue(KEYS.WUERFELZAHL));
+			
 			String nachrichtFiguren = theNachricht.getValue(Nachricht.KEYS.FIGUREN);
+			if (!this.istSpielGestartet)
+				this.istSpielGestartet = true;
 			
 			this.spielerFiguren = figurenFromString(nachrichtFiguren);
 			break;
@@ -140,5 +143,17 @@ public class ClientSicht implements Serializable {
 	
 	public byte getMeineNummer() {
 		return meineNummer;
+	}
+	
+	public byte getAktuellerSpieler() {
+		return this.aktuellerSpieler;
+	}
+	
+	public byte letzteWuerfelZahl() {
+		return this.letzteWuerfelZahl;
+	}
+	
+	public boolean binDran() {
+		return this.aktuellerSpieler == this.meineNummer;
 	}
 }

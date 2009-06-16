@@ -81,7 +81,9 @@ public class ServerKommunikationsThread implements Runnable
     			ois.close();
     			socket.close();
     			
-    		}catch (IOException e){}
+    		}catch (IOException e){
+    			e.printStackTrace();
+    		}
     }
     
     private void bearbeiteBewegungsAufforderung(Nachricht n)
@@ -143,6 +145,15 @@ public class ServerKommunikationsThread implements Runnable
             sendeNachricht(n);
     }
     
+    public void sendeWuerfelZahl(String spielerName, int spielerIndex, int wuerfelZahl) {
+		Nachricht wuerfelNachricht = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.SPIELER_X_WUERFELT_Y);
+		wuerfelNachricht.setValue(KEYS.SPIELER_NAME, spielerName);
+		wuerfelNachricht.setValue(KEYS.SPIELER_NUMMER, ""+spielerIndex);
+		wuerfelNachricht.setValue(KEYS.WUERFELZAHL, ""+wuerfelZahl);
+        wuerfelNachricht.setValue(KEYS.FIGUREN, "" + MenschMain.getDasSpiel().toClientSicht());
+		this.server.sendeNachrichtAnAlleClients(wuerfelNachricht);
+    }
+
     public void sendeSpielerHatGewonnen(String spielerName)
     {
 		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.SPIELER_X_HAT_GEWONNEN);

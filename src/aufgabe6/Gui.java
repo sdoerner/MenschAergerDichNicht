@@ -510,12 +510,12 @@ public class Gui implements GuiInterface {
 			if (Client.getInstance().getClientRelevanteDaten().istSpielGestartet()) {
 				int size = this.getWidth();
 				Point position = new Point(e.getX()*11/size, e.getY()*11/size);
-				System.out.println("clickPosition: " + position);
+				position.setLocation(position.y, position.x);
 				int spielerNummer = Client.getInstance().getClientRelevanteDaten().getMeineNummer();
 				boolean figurExistiert = false;
 				for(int positionFigur: Client.getInstance().getClientRelevanteDaten().getSpielerFiguren()[spielerNummer]){
 					if(positionFigur==-1){
-						switch (spielerNummer) {
+						/*switch (spielerNummer) {
 						case 0:
 							if ((position.x == 0 && position.y == 0)
 									|| (position.x == 1 && position.y == 0)
@@ -550,7 +550,7 @@ public class Gui implements GuiInterface {
 							break;
 						default:
 							break;
-						}
+						}*/
 					}else{
 						if(positionFigur>=0&&position.equals(this.figurenPositionen[positionFigur])){
 							figurExistiert = true;
