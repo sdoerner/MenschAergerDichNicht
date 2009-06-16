@@ -99,6 +99,8 @@ public class Spiel extends Thread {
         
         while (!istSiegerGefunden) {
         	for (Spieler itSpieler : spieler) {
+        		if (itSpieler==null)
+        			continue;
         		aktuellerSpieler = itSpieler;
         		
         		if (!itSpieler.istDraussen()) {				// hat der Spieler schon eine Figur auf dem Spielfeld?
@@ -121,9 +123,9 @@ public class Spiel extends Thread {
         	}
         }
         //benachrichtige alle Clients ueber das Spielende 
-        int indexGewinner = aktuellerSpieler.getSpielernummer();
+        String nameGewinner = aktuellerSpieler.getName();
         for (Spieler itSpieler: spieler)
-        	itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(indexGewinner);
+        	itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(nameGewinner);
     }
     
     public ClientSicht toClientView() {

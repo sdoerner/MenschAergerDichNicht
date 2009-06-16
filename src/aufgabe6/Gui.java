@@ -364,6 +364,15 @@ public class Gui implements GuiInterface {
 		this.spielfeldContainer.validate();	
 	}
 	
+	public void entferneSpielfeld()
+	{
+		spielfeld = null;
+		spielfeldContainer.removeAll();
+		spielfeldContainer.validate();
+		spielfeldContainer.repaint();
+		toggleVerbindenKnopf();
+	}
+	
 	@SuppressWarnings({ "serial" })
 	private class GuiSpielfeld extends JPanel implements MouseListener{
 		private byte [][] feld = null;

@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 import aufgabe6.Gui;
 import aufgabe6.net.Nachricht.KEYS;
 import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
@@ -66,7 +68,13 @@ public class ClientKommunikationsThread implements Runnable
                 e.printStackTrace();
             }
         }
-    }
+		try
+		{
+			this.socket.close();
+			aufgabe6.Gui.getGui().entferneSpielfeld();
+			
+		}catch (IOException e){}
+	}
     
     /**
      * sendet eine Nachricht
@@ -124,6 +132,8 @@ public class ClientKommunikationsThread implements Runnable
     		break;
     	case SPIELER_X_HAT_GEWONNEN:
     		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
+    		JOptionPane.showMessageDialog(null, theNachricht.getLogMessage(), "Mensch aergere dich nicht : Spielende", JOptionPane.INFORMATION_MESSAGE);
+    		this.sendeTrennen();
 			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus
     	}
     }
