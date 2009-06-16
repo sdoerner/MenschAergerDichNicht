@@ -1,7 +1,5 @@
 package aufgabe6;
 
-import java.util.Vector;
-
 import aufgabe6.net.ServerKommunikationsThread;
 
 public class Spiel extends Thread {
@@ -16,6 +14,8 @@ public class Spiel extends Thread {
 	
     public Spiel() {
         spieler = new Spieler[4];
+        for (int i = 0; i < 4; i++)
+        	spieler[i] = null;
 	}
 	
 	@Override
@@ -128,7 +128,11 @@ public class Spiel extends Thread {
         	itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(nameGewinner);
     }
     
-    public ClientSicht toClientView() {
+    /**
+     * gibt die aktuellen Positionen der Spielfiguren als ClientSicht zurueck
+     * @return die aktuellen Spielfigurpositionen als ClientSicht
+     */
+    public ClientSicht toClientSicht() {
     	return new ClientSicht(spieler);
     }
 }
