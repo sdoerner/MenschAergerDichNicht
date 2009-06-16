@@ -110,13 +110,13 @@ public class Gui implements GuiInterface {
 	private void verbinde() {
 		Client c = Client.getInstance();
         int index = serverAnsicht.getSelectedIndex();
-        c.verbinde(c.getServerInfos().get(index).getIp(), spielerNamensFeld.getText());
-        
-        this.spielfeld = new GuiSpielfeld();
-        
-        this.spielfeldContainer.add(this.spielfeld);
-        
-        passeSpielfeldAn();
+        if (c.verbinde(c.getServerInfos().get(index).getIp(), spielerNamensFeld.getText()))
+		{
+			this.spielfeld = new GuiSpielfeld();
+			this.spielfeldContainer.add(this.spielfeld);
+			passeSpielfeldAn();
+			toggleVerbindenKnopf();
+		}
 	}
 	
 	public void setStartenKnopfZustand(boolean wirKoennenStarten)
@@ -232,7 +232,6 @@ public class Gui implements GuiInterface {
 			public void mouseClicked(MouseEvent event) {
 				if(event.getClickCount()>1 && verbindenHeisstVerbinden) {
 					verbinde();
-					toggleVerbindenKnopf();
 				}
 			}
 			public void mouseEntered(MouseEvent arg0) {}
@@ -311,7 +310,6 @@ public class Gui implements GuiInterface {
 			public void actionPerformed(ActionEvent e){
 				if(verbindenHeisstVerbinden) {
 					verbinde();
-					toggleVerbindenKnopf();
 				} else {
 					trennen();
 					spielfeldContainer.removeAll();
