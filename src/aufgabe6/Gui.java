@@ -29,14 +29,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.JTextArea;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import aufgabe6.net.Client;
 import aufgabe6.net.Server;
@@ -60,13 +57,7 @@ public class Gui implements GuiInterface {
 	private JPanel serverSicht = null;
 	private final JList serverAnsicht = new JList(serverList);
 	
-	private JTree spielerAnsicht = null;
-	
-	private DefaultMutableTreeNode wurzelKnotenSpielerAnsicht = null;
-	
 	private JScrollPane serverAnsichtsContainer = null;
-	
-	private DefaultMutableTreeNode wurzelKnotenServerAnsicht = null;
 	
 	private JTextField namensFeld = null;
 	public String getNamensFeldInhalt()
@@ -235,10 +226,10 @@ public class Gui implements GuiInterface {
 					toggleVerbindenKnopf();
 				}
 			}
-			public void mouseEntered(MouseEvent arg0) {}
-			public void mouseExited(MouseEvent arg0) {}
-			public void mousePressed(MouseEvent arg0) {}
-			public void mouseReleased(MouseEvent arg0) {}
+			public void mouseEntered(MouseEvent arg0) {/*kann leer bleiben*/}
+			public void mouseExited(MouseEvent arg0) {/*kann leer bleiben*/}
+			public void mousePressed(MouseEvent arg0) {/*kann leer bleiben*/}
+			public void mouseReleased(MouseEvent arg0) {/*kann leer bleiben*/}
 		});
 		
 		this.serverAnsichtsContainer = new JScrollPane(serverAnsicht);
@@ -332,10 +323,6 @@ public class Gui implements GuiInterface {
 		
 		rechtesUnterFenster.add(this.serverSicht, BorderLayout.NORTH);
 		
-		this.wurzelKnotenSpielerAnsicht = new DefaultMutableTreeNode();
-		
-		this.spielerAnsicht = new JTree(this.wurzelKnotenSpielerAnsicht);
-		
 		this.spielNachrichten = new JTextArea();
 		this.spielNachrichten.setEditable(false);
 		
@@ -428,7 +415,7 @@ public class Gui implements GuiInterface {
 				g2.setColor(currentColor.darker().darker());
 				int amStartZaehler = 0;
 				for(int figur : sicht.getSpielerFiguren()[i]){
-					System.out.println(figur);
+					System.out.println("Position einer Figur von Spieler : " + i + ": " + figur);
 					if(figur > -2){
 						Point position = new Point();
 						if(figur == -1){
@@ -513,7 +500,7 @@ public class Gui implements GuiInterface {
 		public void mouseClicked(MouseEvent e) {
 			int size = this.getWidth();
 			Point position = new Point(e.getX()*11/size, e.getY()*11/size);
-			System.out.println(position);
+			System.out.println("clickPosition: " + position);
 			int spielerNummer = Client.getInstance().getClientRelevanteDaten().getMeineNummer();
 			boolean figurExistiert = false;
 			for(int positionFigur: Client.getInstance().getClientRelevanteDaten().getSpielerFiguren()[spielerNummer]){

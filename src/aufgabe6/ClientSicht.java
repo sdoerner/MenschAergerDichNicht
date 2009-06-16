@@ -2,10 +2,10 @@ package aufgabe6;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Vector;
 
 import aufgabe6.net.Client;
 import aufgabe6.net.Nachricht;
+import aufgabe6.net.Nachricht.KEYS;
 
 /**
  * beinhaltet die Informationen ueber das Spiel, die für den Client relevant sind.
@@ -36,13 +36,18 @@ public class ClientSicht implements Serializable {
 	 * @param theSpieler der Spielervektor
 	 */
 	public ClientSicht(Spieler[] theSpieler) {
+		spielerFiguren = new int[4][4];
+		
 		for (int itSpieler = 0; itSpieler < theSpieler.length; itSpieler++) {
 			if (theSpieler[itSpieler] != null) {
 				for (int itFigur = 0; itFigur < 4; itFigur++)
 					spielerFiguren[itSpieler][itFigur] = theSpieler[itSpieler].getFiguren().get(itFigur).getPosition();
-			} else
+			} else {
 				Arrays.fill(spielerFiguren[itSpieler], -2);
+			}
 		}
+		
+		System.out.println(Arrays.deepToString(spielerFiguren));
 	}
 	
 	/**
@@ -74,6 +79,7 @@ public class ClientSicht implements Serializable {
 		    		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
 
 				this.spielerName[dieNummer] = derName;
+				this.spielerFiguren = figurenFromString(theNachricht.getValue(KEYS.FIGUREN));
 			}
 			break;
 		case SPIELER_X_WUERFELT_Y:

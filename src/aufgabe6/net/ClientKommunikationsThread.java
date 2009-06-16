@@ -89,7 +89,7 @@ public class ClientKommunikationsThread implements Runnable
     {
         Nachricht n = new Nachricht(this.client.getName(),NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG);
         n.setValue(KEYS.FIGUREN_POSITION, ""+x);
-        System.out.println("new Value: "+ n.getValue(KEYS.FIGUREN_POSITION));
+        System.out.println("new Value (bewegung): "+ n.getValue(KEYS.FIGUREN_POSITION));
         this.sendeNachricht(n);
     }
     

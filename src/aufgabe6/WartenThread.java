@@ -1,7 +1,5 @@
 package aufgabe6;
 
-import java.util.Calendar;
-
 /**
  * 
  */
