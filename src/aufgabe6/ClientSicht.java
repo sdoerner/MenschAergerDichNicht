@@ -21,6 +21,7 @@ public class ClientSicht implements Serializable {
 	private boolean istSpielGestartet = false;
 	private byte aktuellerSpieler = -1;
 	private byte letzteWuerfelZahl = -1;
+	private boolean zugAusstehend = false;
 	
 	public boolean istSpielGestartet() {
 		return istSpielGestartet;
@@ -98,6 +99,7 @@ public class ClientSicht implements Serializable {
 				this.istSpielGestartet = true;
 			
 			this.spielerFiguren = figurenFromString(nachrichtFiguren);
+			zugAusstehend = true;
 			break;
 		}
 	}
@@ -155,5 +157,15 @@ public class ClientSicht implements Serializable {
 	
 	public boolean binDran() {
 		return this.aktuellerSpieler == this.meineNummer;
+	}
+
+	public void setZugAusstehend(boolean zugAusstehend)
+	{
+		this.zugAusstehend = zugAusstehend;
+	}
+
+	public boolean isZugAusstehend()
+	{
+		return zugAusstehend;
 	}
 }

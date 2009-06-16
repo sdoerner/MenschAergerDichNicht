@@ -135,7 +135,7 @@ public class ClientKommunikationsThread implements Runnable
     		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
     		break;
     	case UNGUELTIGER_ZUG:
-    		// TODO fuehre letzte Operation nochmal aus (wenn ich selbst zuletzt dran gewesen, nochmal Klick erforderlich, ansonsten warten)
+    		Client.getInstance().getClientRelevanteDaten().setZugAusstehend(true);
     		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
     		break;
     	case SPIELER_X_HAT_GEWONNEN:
