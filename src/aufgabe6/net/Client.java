@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import aufgabe6.ClientSicht;
 
 public class Client {
@@ -25,7 +27,13 @@ public class Client {
         this.clientRelevanteDaten = new ClientSicht();
     }
     
-    
+	/**
+	 * loescht alle Daten des aktuellen Spiels
+	 */
+    public void loescheClientRelevanteDaten() {
+    	this.clientRelevanteDaten = new ClientSicht();
+    	this.clientKommunikationsThread = null;
+    }
     
     private static Client instance;
 
@@ -53,11 +61,18 @@ public class Client {
 			so.connect(inet);
 			initialisiereKommunikationsThread(so);
 		} catch (UnknownHostException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Fehler: Der angegebene Server ist nicht erreichbar", "Mensch aergere dich nicht : Fehler", JOptionPane.ERROR_MESSAGE);
+			// TODO breche Verbindungsaufbau ab
 		} catch (IOException e1) {
-			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Fehler: Der Server ist nicht mehr erreichbar", "Mensch aergere dich nicht : Fehler", JOptionPane.ERROR_MESSAGE);
+			// TODO breche Verbindung ab
 		}
     }
+    
+    public void trenne() {
+        this.clientKommunikationsThread.sendeTrennen();
+    }
+    
     public Vector<ServerInfo> getServerInfos()
     {
         return serverInfos;
@@ -91,8 +106,7 @@ public class Client {
         public String getIp()
         {
             return ip;
-        }
-        
+        }   
     }
     
     public ClientSicht getClientRelevanteDaten() {

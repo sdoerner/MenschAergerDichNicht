@@ -79,15 +79,11 @@ public class Nachricht implements Serializable
     		return this.getValue(KEYS.SPIELER_NAME) + " hat eine " + this.getValue(KEYS.WUERFELZAHL) + " gewuerfelt.";
     	case UNGUELTIGER_ZUG:
     		return "Der versuchte Zug ist ungueltig, " + this.getValue(KEYS.SPIELER_NAME) + " muss eine andere Figur waehlen";
-    	case SPIELER_PLUS_MINUS:
-    		if (this.getValue(KEYS.SPIELER_NUMMER) == null)
-    			return this.getValue(KEYS.SPIELER_NAME) + " tritt dem Spiel bei.";
-    		else {
-	    		if (Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER)) < 0)
-	    			return this.getValue(KEYS.SPIELER_NAME) + " hat das Spiel verlassen.";
-	    		else
-	    			return "Sie sind dem Spiel als Spieler " + this.getValue(KEYS.SPIELER_NUMMER) + " beigetreten.";
-    		}
+    	case SPIELER_PLUS_MINUS:		// wird nur vom Server verwendet, Logs vom Client bezüglich dieser Nachricht werden in ClientSicht gesetzt
+    		if ((this.getValue(KEYS.SPIELER_NUMMER) == null) || (Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER)) >= 0))
+    			return this.getValue(KEYS.SPIELER_NAME) + " ist dem Spiel beigetreten.";
+    		else
+    			return "Spieler " + String.valueOf(-Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER))) + " hat das Spiel verlassen.";
     	default: return null;
     	}
     }

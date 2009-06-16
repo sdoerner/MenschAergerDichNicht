@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Vector;
 
+import aufgabe6.net.Client;
 import aufgabe6.net.Nachricht;
 
 /**
@@ -34,11 +35,11 @@ public class ClientSicht implements Serializable {
 	 * erzeuge ClientSicht aus einem Spieler-Vektor (vom Server aufzurufen)
 	 * @param theSpieler der Spielervektor
 	 */
-	public ClientSicht(Vector<Spieler> theSpieler) {
-		for (int itSpieler = 0; itSpieler < theSpieler.size(); itSpieler++) {
-			if (theSpieler.get(itSpieler) != null) {
+	public ClientSicht(Spieler[] theSpieler) {
+		for (int itSpieler = 0; itSpieler < theSpieler.length; itSpieler++) {
+			if (theSpieler[itSpieler] != null) {
 				for (int itFigur = 0; itFigur < 4; itFigur++)
-					spielerFiguren[itSpieler][itFigur] = theSpieler.get(itSpieler).getFiguren().get(itFigur).getPosition();
+					spielerFiguren[itSpieler][itFigur] = theSpieler[itSpieler].getFiguren().get(itFigur).getPosition();
 			} else
 				Arrays.fill(spielerFiguren[itSpieler], -2);
 		}
@@ -55,11 +56,23 @@ public class ClientSicht implements Serializable {
 			Byte dieNummer = Byte.parseByte(theNachricht.getValue(Nachricht.KEYS.SPIELER_NUMMER));
 			
 			if (dieNummer < 0) {		// Spieler soll geloescht werden
+				dieNummer++;			// Spielernummern muessen bei SPIELER_PLUS_MINUS so kodiert werden, dass -0 nicht erreicht wird, sie reichen also von 1 bis 4 (bzw. -4 bis -1) statt von 0 bis 3
 				this.spielerName[-dieNummer] = "";
 				Arrays.fill(this.spielerFiguren[-dieNummer], -2);
+				
+				if (-dieNummer == this.meineNummer) {	// ich selbst soll geloescht werden
+		    		Gui.getGui().appendToTextPane("Sie haben das Spiel verlassen.");
+			        Client.getInstance().loescheClientRelevanteDaten();
+				} else
+		    		Gui.getGui().appendToTextPane(derName + " hat das Spiel verlassen.");
 			} else {					// Spieler soll hinzugefuegt werden
-				if (this.meineNummer == -1)
+				dieNummer--;			// Spielernummern muessen bei SPIELER_PLUS_MINUS so kodiert werden, dass -0 nicht erreicht wird, sie reichen also von 1 bis 4 (bzw. -4 bis -1) statt von 0 bis 3
+				if (this.meineNummer == -1) {
 					this.meineNummer = dieNummer;
+		    		Gui.getGui().appendToTextPane("Sie sind dem Spiel als Spieler " + (dieNummer + 1) + " beigetreten.");
+				} else
+		    		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
+
 				this.spielerName[dieNummer] = derName;
 			}
 			break;

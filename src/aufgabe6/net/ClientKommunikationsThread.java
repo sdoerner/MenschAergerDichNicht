@@ -58,8 +58,11 @@ public class ClientKommunikationsThread implements Runnable
                     
                     verarbeiteNachricht(newNachricht);
                 }
-            } catch (Exception e) {
-                System.err.println("Fehler beim Lesen einer Nachricht");
+            } catch (ClassNotFoundException e) {
+                System.err.println("Fehler beim Lesen einer Nachricht: Class not found");
+                e.printStackTrace();
+            } catch (IOException e) {
+                System.err.println("Fehler beim Lesen einer Nachricht: IO");
                 e.printStackTrace();
             }
         }
@@ -78,13 +81,26 @@ public class ClientKommunikationsThread implements Runnable
         }
     }
     
+    /**
+     * sendet an den Server, dass die Figur an Position x bewegt werden soll
+     * @param x die Position der zu bewegenden Figur
+     */
     public void sendeBewegungsAufforderung(int x)
     {
         Nachricht n = new Nachricht(this.client.getName(),NACHRICHTEN_TYP.BEWEGUNGS_AUFFORDERUNG);
         n.setValue(KEYS.FIGUREN_POSITION, ""+x);
         System.out.println("new Value: "+ n.getValue(KEYS.FIGUREN_POSITION));
-        System.out.println(n.getSender());
         this.sendeNachricht(n);
+    }
+    
+    /**
+     * sendet eine Trennen-Nachricht an den Server und löscht die aktuelle ClientSicht
+     */
+    public void sendeTrennen() {
+        Nachricht trennNachricht = new Nachricht(this.client.getName(),NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
+        trennNachricht.setValue(KEYS.SPIELER_NUMMER, String.valueOf(-(this.client.getClientRelevanteDaten().getMeineNummer() + 1)));
+        trennNachricht.setValue(KEYS.SPIELER_NAME, Gui.getGui().getSpielerNamensFeldInhalt());
+        this.sendeNachricht(trennNachricht);
     }
     
     /**
@@ -96,9 +112,6 @@ public class ClientKommunikationsThread implements Runnable
     	case SPIELER_PLUS_MINUS:
     		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
     		// TODO aktualisiere GUI mit den neuen Figurenwerten
-    		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
-    		System.out.println("received Server hello from " + theNachricht.getSender()); 		// DEBUG
-    		System.out.println("Spielernummer: " + theNachricht.getValue(KEYS.SPIELER_NUMMER));
     		break;
     	case SPIELER_X_WUERFELT_Y:
     		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
@@ -113,13 +126,5 @@ public class ClientKommunikationsThread implements Runnable
     		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
 			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus
     	}
-    	/*
-    	// Anzeigen der Nachrichten im TextPane "spielNachrichten" in der GUI
-    	String msg = theNachricht.getLogMessage();
-    	if (msg != null) {
-    		for(int i=0;i<50;i++) {
-    			Gui.getGui().appendToTextPane(msg+" "+i);
-    		}
-    	}*/
     }
 }

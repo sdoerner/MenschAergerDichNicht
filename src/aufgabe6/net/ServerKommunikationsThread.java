@@ -9,7 +9,6 @@ import java.net.Socket;
 
 import aufgabe6.Gui;
 import aufgabe6.MenschMain;
-import aufgabe6.Spielfeld;
 import aufgabe6.net.Nachricht.KEYS;
 import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
 
@@ -29,12 +28,11 @@ public class ServerKommunikationsThread implements Runnable
         this.socket = socket;
         this.server = server;
         try{
-//        socket.setKeepAlive(true);
-        
-        is=this.socket.getInputStream();
-        os=this.socket.getOutputStream();
-        oos = new ObjectOutputStream(os);
-//        sc = new Scanner(is);
+	//        socket.setKeepAlive(true);
+	        
+	        is=this.socket.getInputStream();
+	        os=this.socket.getOutputStream();
+	        oos = new ObjectOutputStream(os);
         } catch (Exception e)
         {
             System.err.println("Konnte auf dem Server einen Kommunikationsthread nicht starten");
@@ -48,7 +46,7 @@ public class ServerKommunikationsThread implements Runnable
     @Override
     public void run()
     {
-        String s;
+        //String s;
      //dauerhaft auf Nachrichten vom Client warten
         while (!this.abbrechen)
         {
@@ -80,8 +78,6 @@ public class ServerKommunikationsThread implements Runnable
         }
     }
     
-
-    
     private void bearbeiteBewegungsAufforderung(Nachricht n)
     {
         int position = Integer.parseInt(n.getValue(KEYS.FIGUREN_POSITION));
@@ -94,14 +90,26 @@ public class ServerKommunikationsThread implements Runnable
     
     private void bearbeiteSpielerPlusMinus(Nachricht n)
     {
-    	int index = MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME),this);
-    	
         Nachricht nOut = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
-        nOut.setValue(KEYS.SPIELER_NUMMER, ""+index);
-        nOut.setValue(KEYS.SPIELER_NAME, ""+n.getValue(KEYS.SPIELER_NAME));
-        this.sendeNachricht(nOut);
+        boolean trenne = false;
         
-        //System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
+    	if ((n.getValue(KEYS.SPIELER_NUMMER) == null) || (Byte.parseByte(n.getValue(KEYS.SPIELER_NUMMER)) > 0)) {
+	    	int index = MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME),this);
+	    	
+	        nOut.setValue(KEYS.SPIELER_NUMMER, ""+ (index+1));
+	        nOut.setValue(KEYS.SPIELER_NAME, "" + n.getValue(KEYS.SPIELER_NAME));
+    	} else {
+    		byte spielerNummer = Byte.parseByte(n.getValue(KEYS.SPIELER_NUMMER));
+    		
+    		MenschMain.getDasSpiel().trenneSpieler((byte)-(spielerNummer + 1));
+	        nOut.setValue(KEYS.SPIELER_NUMMER, n.getValue(KEYS.SPIELER_NUMMER));
+	        nOut.setValue(KEYS.SPIELER_NAME, n.getValue(KEYS.SPIELER_NAME));
+	        trenne = true;
+    	}
+    	
+        this.server.sendeNachrichtAnAlleClients(nOut);
+		if (trenne)
+			this.server.trenneClient(this);
         Gui.getGui().setStartenKnopfZustand(true);
     }
     
@@ -111,8 +119,8 @@ public class ServerKommunikationsThread implements Runnable
     public void sendeNachricht(Nachricht n)
     {
         try{
-        oos.writeObject(n);
-        oos.flush();
+	        oos.writeObject(n);
+	        oos.flush();
         }
         catch (IOException e){
             System.err.println("Fehler beim Senden der Nachricht.");
@@ -129,6 +137,6 @@ public class ServerKommunikationsThread implements Runnable
     {
 		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.SPIELER_X_HAT_GEWONNEN);
 		n.setValue(KEYS.SPIELER_NUMMER, ""+spielerIndex);
-        sendeNachricht(n);
+		this.server.sendeNachrichtAnAlleClients(n);
     }
 }

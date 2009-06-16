@@ -110,7 +110,6 @@ public class Gui implements GuiInterface {
 	private void verbinde() {
 		Client c = Client.getInstance();
         int index = serverAnsicht.getSelectedIndex();
-        System.out.println(c.getServerInfos().get(index).getIp());
         c.verbinde(c.getServerInfos().get(index).getIp(), spielerNamensFeld.getText());
         
         this.spielfeld = new GuiSpielfeld();
@@ -118,9 +117,6 @@ public class Gui implements GuiInterface {
         this.spielfeldContainer.add(this.spielfeld);
         
         passeSpielfeldAn();
-
-        
-        System.out.println(this.spielfeld);
 	}
 	
 	public void setStartenKnopfZustand(boolean wirKoennenStarten)
@@ -170,8 +166,10 @@ public class Gui implements GuiInterface {
 	private void toggleVerbindenKnopf() {
 		if(verbindenHeisstVerbinden) {
 			verbindeKnopf.setText("trennen");
+			spielerNamensFeld.setEnabled(false);
 		} else {
 			verbindeKnopf.setText("verbinden");
+			spielerNamensFeld.setEnabled(true);
 		}
 		verbindenHeisstVerbinden = !verbindenHeisstVerbinden;
 	}
@@ -315,7 +313,7 @@ public class Gui implements GuiInterface {
 					verbinde();
 					toggleVerbindenKnopf();
 				} else {
-					//trennen();
+					trennen();
 					toggleVerbindenKnopf();
 				}
 			}
@@ -349,6 +347,10 @@ public class Gui implements GuiInterface {
 	
 	}
 	
+	private void trennen() {
+		Client.getInstance().trenne();
+	}
+
 	/* (non-Javadoc)
 	 * @see aufgabe6.GuiInterface#aenderFigurPosition(aufgabe6.Figur, int, int)
 	 */

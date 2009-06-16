@@ -5,7 +5,7 @@ import java.util.Vector;
 import aufgabe6.net.ServerKommunikationsThread;
 
 public class Spiel extends Thread {
-	private static Vector<Spieler> spieler = null;
+	private static Spieler[] spieler = null;
 	private static Spieler aktuellerSpieler = null;
 	private int gewaehlteFigurenPosition;
 
@@ -15,7 +15,7 @@ public class Spiel extends Thread {
     }
 	
     public Spiel() {
-        spieler = new Vector<Spieler>(4);
+        spieler = new Spieler[4];
 	}
 	
 	@Override
@@ -59,14 +59,36 @@ public class Spiel extends Thread {
 		while (gewuerfelteZahl == 6);
 	}
 	
+	/**
+	 * berechnet den ersten freien Platz im Spielerarray
+	 * @return der erste freie Platz im Spielerarray (zwischen 0 und 3), wenn noch ein Platz frei ist; sonst -1
+	 */
+	private byte ersterFreierPlatz() {
+		for (byte i = 0; i < 4; i++)
+			if (spieler[i] == null)
+				return i;
+		
+		return -1;
+	}
+	
     /**
-     * fuege einen neuen Spieler zum Spiel hinzu und gibt seinen index zurück
+     * fuege einen neuen Spieler zum Spiel hinzu und gibt seinen Index zurück
      */
     public int verbindeSpieler(String name, ServerKommunikationsThread thread) {
-    	Spieler s = new Spieler(name, spieler.size(), true);
-    	s.setServerKommunikationsThread(thread);
-    	spieler.add(s);
-    	return spieler.indexOf(s);
+    	byte spielerPlatz = ersterFreierPlatz();
+    	
+    	if (spielerPlatz == -1)
+    		return -1;
+    	else {
+	    	Spieler s = new Spieler(name, spielerPlatz, true);
+	    	s.setServerKommunikationsThread(thread);
+	    	spieler[spielerPlatz] = s;
+	    	return spielerPlatz;
+    	}
+    }
+    
+    public void trenneSpieler(byte spielerNummer) {
+    	spieler[spielerNummer] = null;
     }
     
     /**
@@ -99,11 +121,9 @@ public class Spiel extends Thread {
         	}
         }
         //benachrichtige alle Clients ueber das Spielende 
-        int indexGewinner = spieler.indexOf(aktuellerSpieler);
+        int indexGewinner = aktuellerSpieler.getSpielernummer();
         for (Spieler itSpieler: spieler)
-        {
         	itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(indexGewinner);
-        }
     }
     
     public ClientSicht toClientView() {
