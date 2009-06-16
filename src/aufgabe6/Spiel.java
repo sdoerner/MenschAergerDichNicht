@@ -126,7 +126,11 @@ public class Spiel extends Thread {
         	itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(indexGewinner);
     }
     
-    public synchronized ClientSicht toClientView() {
+    /**
+     * gibt die aktuellen Positionen der Spielfiguren als ClientSicht zurueck
+     * @return die aktuellen Spielfigurpositionen als ClientSicht
+     */
+    public ClientSicht toClientSicht() {
     	return new ClientSicht(spieler);
     }
 }

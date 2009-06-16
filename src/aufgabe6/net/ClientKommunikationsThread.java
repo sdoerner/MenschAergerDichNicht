@@ -111,6 +111,7 @@ public class ClientKommunikationsThread implements Runnable
     	switch (theNachricht.getNachrichtenTyp()) {
     	case SPIELER_PLUS_MINUS:
     		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
+    		Gui.getGui().repaintSpielfeld();
     		// TODO aktualisiere GUI mit den neuen Figurenwerten
     		break;
     	case SPIELER_X_WUERFELT_Y:

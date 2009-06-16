@@ -136,4 +136,9 @@ public class Spieler {
 	{
 		return serverKommunikationsThread;
 	}
+	
+	// TODO determine if isNetwork is used at all
+	public boolean isNetwork() {
+		return isNetwork;
+	}
 }

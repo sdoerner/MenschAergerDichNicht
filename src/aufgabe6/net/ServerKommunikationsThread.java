@@ -98,7 +98,7 @@ public class ServerKommunikationsThread implements Runnable
 	    	
 	        nOut.setValue(KEYS.SPIELER_NUMMER, ""+ (index+1));
 	        nOut.setValue(KEYS.SPIELER_NAME, "" + n.getValue(KEYS.SPIELER_NAME));
-	        nOut.setValue(KEYS.FIGUREN, "" + MenschMain.getDasSpiel().toClientView());
+	        nOut.setValue(KEYS.FIGUREN, "" + MenschMain.getDasSpiel().toClientSicht());
     	} else {
     		byte spielerNummer = Byte.parseByte(n.getValue(KEYS.SPIELER_NUMMER));
     		

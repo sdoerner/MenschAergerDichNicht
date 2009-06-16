@@ -18,7 +18,16 @@ public class ClientSicht implements Serializable {
 	private int[][] spielerFiguren = null;
 	private String[] spielerName = null;
 	private byte meineNummer = -1;
+	private boolean istSpielGestartet = false;
 	
+	public boolean istSpielGestartet() {
+		return istSpielGestartet;
+	}
+
+	public void setIstSpielGestartet(boolean istSpielGestartet) {
+		this.istSpielGestartet = istSpielGestartet;
+	}
+
 	/**
 	 * initialisiert eine neue Clientview
 	 */
@@ -46,8 +55,6 @@ public class ClientSicht implements Serializable {
 				Arrays.fill(spielerFiguren[itSpieler], -2);
 			}
 		}
-		
-		System.out.println(Arrays.deepToString(spielerFiguren));
 	}
 	
 	/**
@@ -92,21 +99,32 @@ public class ClientSicht implements Serializable {
 		}
 	}
 	
+	/**
+	 * wandelt die Figuren dieser ClientSicht in einen String um, der versendet werden kann
+	 */
 	public String toString() {
 		String retString = "";
 		
-		for (int i = 0; i < 4; i++)
-			retString += spielerFiguren[i] + ",";
-			
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++)
+				retString += spielerFiguren[i][j] + ",";
+			retString += ";";
+		}
+
 		return retString;
 	}
 	
+	/**
+	 * wandelt einen vom Server erhaltenen String in ein Figuren-Array um
+	 * @param theString der vom Server erhaltene String
+	 * @return das Figuren-Array, das aus dem String erstellt wurde
+	 */
 	private int[][] figurenFromString(String theString) {
 		int[][] retArr = new int[4][4];
 		
 		String[] splitString = theString.split(";");
 		
-		for (int i = 0; i < splitString.length - 1; i++) {
+		for (int i = 0; i < splitString.length; i++) {
 			String[] splitString2 = splitString[i].split(",");
 			
 			for (int j = 0; j < splitString2.length; j++)
