@@ -52,21 +52,23 @@ public class Client {
         thread.start();
     }
 	    
-    public void verbinde(String theIP, String name) {
+    public boolean verbinde(String theIP, String name) {
         this.name = name;
     	Socket so;
 		try {
 			InetSocketAddress inet = new InetSocketAddress(theIP, 9999);
 			so = new Socket();
+			so.setSoTimeout(1000);
 			so.connect(inet);
 			initialisiereKommunikationsThread(so);
 		} catch (UnknownHostException e1) {
 			JOptionPane.showMessageDialog(null, "Fehler: Der angegebene Server ist nicht erreichbar", "Mensch aergere dich nicht : Fehler", JOptionPane.ERROR_MESSAGE);
-			// TODO breche Verbindungsaufbau ab
+			return false;
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(null, "Fehler: Der Server ist nicht mehr erreichbar", "Mensch aergere dich nicht : Fehler", JOptionPane.ERROR_MESSAGE);
-			// TODO breche Verbindung ab
+			return false;
 		}
+		return true;
     }
     
     public void trenne() {
