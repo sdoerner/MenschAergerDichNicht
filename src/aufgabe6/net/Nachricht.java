@@ -80,10 +80,14 @@ public class Nachricht implements Serializable
     	case UNGUELTIGER_ZUG:
     		return "Der versuchte Zug ist ungueltig, " + this.getValue(KEYS.SPIELER_NAME) + " muss eine andere Figur waehlen";
     	case SPIELER_PLUS_MINUS:
-    		if (Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER)) < 0)
-    			return this.getValue(KEYS.SPIELER_NUMMER) + " hat das Spiel verlassen.";
-    		else
-    			return this.getValue(KEYS.SPIELER_NUMMER) + " ist dem Spiel beigetreten.";
+    		if (this.getValue(KEYS.SPIELER_NUMMER) == null)
+    			return this.getValue(KEYS.SPIELER_NAME) + " tritt dem Spiel bei.";
+    		else {
+	    		if (Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER)) < 0)
+	    			return this.getValue(KEYS.SPIELER_NAME) + " hat das Spiel verlassen.";
+	    		else
+	    			return "Sie sind dem Spiel als Spieler " + this.getValue(KEYS.SPIELER_NUMMER) + " beigetreten.";
+    		}
     	default: return null;
     	}
     }

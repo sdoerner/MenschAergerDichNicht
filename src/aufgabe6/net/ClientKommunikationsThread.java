@@ -94,31 +94,32 @@ public class ClientKommunikationsThread implements Runnable
     private void verarbeiteNachricht(Nachricht theNachricht) {
     	switch (theNachricht.getNachrichtenTyp()) {
     	case SPIELER_PLUS_MINUS:
-    		// Client.getInstance().getClientSicht().verarbeiteNachricht();
-			// TODO aktualisiere GUI mit den neuen Figurenwerten
-			// TODO schreibe dies ins Log
+    		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
+    		// TODO aktualisiere GUI mit den neuen Figurenwerten
+    		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
     		System.out.println("received Server hello from " + theNachricht.getSender()); 		// DEBUG
     		System.out.println("Spielernummer: " + theNachricht.getValue(KEYS.SPIELER_NUMMER));
     		break;
     	case SPIELER_X_WUERFELT_Y:
-	    	// Client.getInstance().getClientSicht().verarbeiteNachricht();
+    		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
 			// TODO aktualisiere GUI mit den neuen Figurenwerten
-			// TODO schreibe dies ins Log
+    		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
     		break;
     	case UNGUELTIGER_ZUG:
     		// TODO fuehre letzte Operation nochmal aus (wenn ich selbst zuletzt dran gewesen, nochmal Klick erforderlich, ansonsten warten)
-    		// TODO schreibe dies ins Log
+    		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
     		break;
     	case SPIELER_X_HAT_GEWONNEN:
-			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus und schreibe das ins Log
+    		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
+			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus
     	}
-    	
+    	/*
     	// Anzeigen der Nachrichten im TextPane "spielNachrichten" in der GUI
     	String msg = theNachricht.getLogMessage();
     	if (msg != null) {
     		for(int i=0;i<50;i++) {
     			Gui.getGui().appendToTextPane(msg+" "+i);
     		}
-    	}
+    	}*/
     }
 }

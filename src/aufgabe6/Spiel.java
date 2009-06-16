@@ -20,7 +20,7 @@ public class Spiel extends Thread {
 	
 	@Override
 	public void run() {
-		System.out.println("xxx");
+		Gui.getGui().appendToTextPane("Das Spiel wurde gestartet.");
 		this.spielen();
 	}
 

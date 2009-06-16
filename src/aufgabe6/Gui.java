@@ -140,7 +140,7 @@ public class Gui implements GuiInterface {
 	}
 	
 	public void appendToTextPane(String s) {
-		spielNachrichten.setText(spielNachrichten.getText()+"\n");
+		spielNachrichten.setText(spielNachrichten.getText() + s + "\n");
 		scrollToEnd();
 	}
 	
@@ -181,16 +181,12 @@ public class Gui implements GuiInterface {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

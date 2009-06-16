@@ -68,6 +68,8 @@ public class ServerKommunikationsThread implements Runnable
 						bearbeiteBewegungsAufforderung(n);
 						break;
 					}
+					
+					Gui.getGui().appendToTextPane(n.getLogMessage());
 				}
 
             } catch (Exception e)
@@ -96,9 +98,10 @@ public class ServerKommunikationsThread implements Runnable
     	
         Nachricht nOut = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         nOut.setValue(KEYS.SPIELER_NUMMER, ""+index);
+        nOut.setValue(KEYS.SPIELER_NAME, ""+n.getValue(KEYS.SPIELER_NAME));
         this.sendeNachricht(nOut);
         
-        System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
+        //System.out.println("registered " + n.getValue(KEYS.SPIELER_NAME) + " as a new player");
         Gui.getGui().setStartenKnopfZustand(true);
     }
     
