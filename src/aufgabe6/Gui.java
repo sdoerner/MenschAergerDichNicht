@@ -261,7 +261,6 @@ public class Gui implements GuiInterface {
                     	if (ichBinDerServer)//ich bin host und habe "Spiel starten" geklickt
                     	{
                     		MenschMain.getDasSpiel().start();
-                    		Client.getInstance().getClientKommunikationsThread().sendeBewegungsAufforderung(5);
                     		erstellKnopf.setEnabled(false);
                     	}
                     	else //"Spiel erstellen geklickt"

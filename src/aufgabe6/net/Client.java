@@ -63,11 +63,9 @@ public class Client {
 			initialisiereKommunikationsThread(so);
 		} catch (UnknownHostException e1) {
 			JOptionPane.showMessageDialog(null, "Fehler: Der angegebene Server ist nicht erreichbar", "Mensch aergere dich nicht : Fehler", JOptionPane.ERROR_MESSAGE);
-			// TODO breche Verbindungsaufbau ab
 			return false;
 		} catch (IOException e1) {
 			JOptionPane.showMessageDialog(null, "Fehler: Der Server ist nicht mehr erreichbar", "Mensch aergere dich nicht : Fehler", JOptionPane.ERROR_MESSAGE);
-			// TODO breche Verbindung ab
 			return false;
 		}
 		return true;
