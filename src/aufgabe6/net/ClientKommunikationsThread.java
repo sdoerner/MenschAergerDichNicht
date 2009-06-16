@@ -141,7 +141,7 @@ public class ClientKommunikationsThread implements Runnable
     		Gui.getGui().appendToTextPane(theNachricht.getLogMessage());
     		JOptionPane.showMessageDialog(null, theNachricht.getLogMessage(), "Mensch aergere dich nicht : Spielende", JOptionPane.INFORMATION_MESSAGE);
     		this.sendeTrennen();
-			break;	//	TODO fuehre eine Spiel-vorbei-Prozedur aus
+			break;
     	}
     }
 }
