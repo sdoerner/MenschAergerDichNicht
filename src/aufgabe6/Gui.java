@@ -314,6 +314,8 @@ public class Gui implements GuiInterface {
 					toggleVerbindenKnopf();
 				} else {
 					trennen();
+					spielfeldContainer.removeAll();
+					spielfeldContainer.repaint();
 					toggleVerbindenKnopf();
 				}
 			}
@@ -346,19 +348,9 @@ public class Gui implements GuiInterface {
 		this.fenster.add(unterteiler);
 	
 	}
-	
+
 	private void trennen() {
 		Client.getInstance().trenne();
-	}
-
-	/* (non-Javadoc)
-	 * @see aufgabe6.GuiInterface#aenderFigurPosition(aufgabe6.Figur, int, int)
-	 */
-
-	@Override
-	public void aenderFigurPosition(Figur f, int vorher, int nachher) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -379,7 +371,7 @@ public class Gui implements GuiInterface {
 	private class GuiSpielfeld extends JPanel implements MouseListener{
 		private byte [][] feld = null;
 		private Point[] figurenPositionen = null;
-		private int[] figurenImHaus = null;
+		//private int[] figurenImHaus = null;
 		
 		public GuiSpielfeld(){
 			this.setBackground(Color.WHITE);
@@ -410,7 +402,8 @@ public class Gui implements GuiInterface {
 					new Point(8,5), new Point(9,5)
 			};
 			
-			this.figurenImHaus = new int[]{ 0,0,0,0 };
+			//this.figurenImHaus = new int[]{ 0,0,0,0 };
+			this.addMouseListener(this);
 		}
 		
 		protected void paintComponent(Graphics g){
@@ -435,6 +428,7 @@ public class Gui implements GuiInterface {
 				g2.setColor(currentColor.darker().darker());
 				int amStartZaehler = 0;
 				for(int figur : sicht.getSpielerFiguren()[i]){
+					System.out.println(figur);
 					if(figur > -2){
 						Point position = new Point();
 						if(figur == -1){
@@ -478,11 +472,12 @@ public class Gui implements GuiInterface {
 							position.x = this.figurenPositionen[figur].y;
 							position.y = this.figurenPositionen[figur].x;
 						}
-						position.x = position.x*laenge+laenge/3;
-						position.y = position.y*laenge+laenge/3;
-						g2.fillOval(position.x, position.y, laenge-laenge/3, laenge-laenge/3);
+						position.x = position.x*laenge;
+						position.y = position.y*laenge;
+						g2.setColor(currentColor.darker().darker());
+						g2.fillOval(position.x+laenge/4, position.y+laenge/4, laenge/2, laenge/2);
 						g2.setColor(currentColor.darker());
-						g2.fillOval(position.x, position.y, laenge-laenge/2, laenge-laenge/2);
+						g2.fillOval(position.x+laenge/3, position.y+laenge/3, laenge/3, laenge/3);
 					}
 				}
 			}
@@ -518,6 +513,7 @@ public class Gui implements GuiInterface {
 		public void mouseClicked(MouseEvent e) {
 			int size = this.getWidth();
 			Point position = new Point(e.getX()*11/size, e.getY()*11/size);
+			System.out.println(position);
 			int spielerNummer = Client.getInstance().getClientRelevanteDaten().getMeineNummer();
 			boolean figurExistiert = false;
 			for(int positionFigur: Client.getInstance().getClientRelevanteDaten().getSpielerFiguren()[spielerNummer]){
@@ -559,7 +555,7 @@ public class Gui implements GuiInterface {
 						break;
 					}
 				}else{
-					if(position.equals(this.figurenPositionen[positionFigur])){
+					if(positionFigur>=0&&position.equals(this.figurenPositionen[positionFigur])){
 						figurExistiert = true;
 					}
 				}
