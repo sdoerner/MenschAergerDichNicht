@@ -33,7 +33,6 @@ public class Spiel extends Thread {
 		do {
 			gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
 			aktuellerSpieler.getServerKommunikationsThread().sendeWuerfelZahl(aktuellerSpieler.getName(), aktuellerSpieler.getSpielernummer(), gewuerfelteZahl);
-			//TODO: Clients über das Würfelergebnis und den letzten Zug informieren, damit der, der dran ist, setzen kann
 			boolean zugErfolgreich = false;
 			while (!zugErfolgreich)
 			{
@@ -53,6 +52,7 @@ public class Spiel extends Thread {
 						+ this.gewaehlteFigurenPosition);
 				zugErfolgreich = !aktuellerSpieler.ziehe(
 						this.gewaehlteFigurenPosition, gewuerfelteZahl);
+				System.out.println("erfolgreich?" + zugErfolgreich);
 				if (!zugErfolgreich)
 					aktuellerSpieler.getServerKommunikationsThread()
 							.sendeZugUngueltig();
