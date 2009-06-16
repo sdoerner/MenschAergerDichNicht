@@ -51,7 +51,7 @@ public class ClientKommunikationsThread implements Runnable
      */
     @Override
     public void run() {
-        while (!this.abbrechen) {
+        while (!this.abbrechen && socket.isConnected()) {
             try {
                 if (input.available() > 0) {
                 	if (ois==null)
@@ -70,7 +70,8 @@ public class ClientKommunikationsThread implements Runnable
         }
 		try
 		{
-			this.socket.close();
+			ois.close();
+			socket.close();
 			aufgabe6.Gui.getGui().entferneSpielfeld();
 			
 		}catch (IOException e){}
@@ -118,8 +119,13 @@ public class ClientKommunikationsThread implements Runnable
     private void verarbeiteNachricht(Nachricht theNachricht) {
     	switch (theNachricht.getNachrichtenTyp()) {
     	case SPIELER_PLUS_MINUS:
-    		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
-    		Gui.getGui().repaintSpielfeld();
+    		if (theNachricht.getValue(KEYS.FIGUREN)!=null)
+    		{
+    			Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
+    			Gui.getGui().repaintSpielfeld();
+    		}
+    		else
+    			this.abbrechen = true;
     		// TODO aktualisiere GUI mit den neuen Figurenwerten
     		break;
     	case SPIELER_X_WUERFELT_Y:

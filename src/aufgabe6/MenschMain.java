@@ -17,5 +17,11 @@ public class MenschMain {
 		
         dasSpiel = new Spiel();
     }
+    
+    public static void neuesSpiel()
+    {
+    	if (!dasSpiel.isAlive())
+    		dasSpiel = new Spiel();
+    }
 
 }

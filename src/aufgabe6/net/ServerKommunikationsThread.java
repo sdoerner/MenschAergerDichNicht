@@ -48,7 +48,7 @@ public class ServerKommunikationsThread implements Runnable
     {
         //String s;
      //dauerhaft auf Nachrichten vom Client warten
-        while (!this.abbrechen)
+        while (!this.abbrechen && socket.isConnected())
         {
             try
             {
@@ -76,6 +76,12 @@ public class ServerKommunikationsThread implements Runnable
                 e.printStackTrace();
             }
         }
+    		try
+    		{
+    			ois.close();
+    			socket.close();
+    			
+    		}catch (IOException e){}
     }
     
     private void bearbeiteBewegungsAufforderung(Nachricht n)
@@ -110,7 +116,10 @@ public class ServerKommunikationsThread implements Runnable
     	
         this.server.sendeNachrichtAnAlleClients(nOut);
 		if (trenne)
+		{
 			this.server.trenneClient(this);
+			this.abbrechen = true;
+		}
         Gui.getGui().setStartenKnopfZustand(true);
     }
     
