@@ -12,8 +12,7 @@ public class MenschMain {
      * @param args
      */
     public static void main(String[] args) {
-		GuiInterface gui = Gui.getGui();
-		gui.starteGui();
+		Gui.getGui().starteGui();
 		
         dasSpiel = new Spiel();
     }

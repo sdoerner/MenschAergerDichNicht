@@ -20,7 +20,7 @@ public class Spieler {
 	 * Konstruktur, der den Einstiegspunkt setzt und die Figuren initialisiert
 	 * @param spielerNummer die Nummer des Spielers (zwischen 0 und 3)
 	 */
-	public Spieler(String name, int spielerNummer, boolean isNetwork) {
+	public Spieler(String name, int spielerNummer) {
 		this.einstiegspunkt = spielerNummer * 10;
 		this.name = name;
 		this.spielerNummer = spielerNummer;
@@ -47,8 +47,9 @@ public class Spieler {
 		    return false;
 		}
 		
-		if (Spielfeld.getInstance().bewegeFigur(this, figur.getPosition(), anzahlSchritte)) {
-			figur.bewege(anzahlSchritte);
+		int neuePosition = Spielfeld.getInstance().bewegeFigur(this, figur.getPosition(), anzahlSchritte);
+		if (neuePosition > -1) {
+			figur.bewege(neuePosition);
 			return true;
 		} else {
 			return false;
@@ -98,7 +99,7 @@ public class Spieler {
 	 */
 	public boolean istDraussen() {
 		for (Figur itFigur : figuren) {
-			if (itFigur.getPosition() > -1)
+			if ((itFigur.getPosition() > -1) && (itFigur.getPosition() < 40))
 				return true;
 		}
 		

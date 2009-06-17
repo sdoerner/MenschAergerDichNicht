@@ -42,7 +42,7 @@ import aufgabe6.net.Server;
  * @author sascha
  *
  */
-public class Gui implements GuiInterface {
+public class Gui {
 	
 	private static final Dimension FENSTER_MIN_DIM = new Dimension(800,600);
 
@@ -341,7 +341,6 @@ public class Gui implements GuiInterface {
 		Client.getInstance().trenne();
 	}
 
-	@Override
 	public void starteGui() {
 		this.fenster.pack();
 		//this.passeSpielfeldAn();

@@ -29,6 +29,13 @@ public class Spielfeld {
 		
 		return instance;
 	}
+
+	private int add40(int dieZahl) {
+		while (dieZahl < 0)
+			dieZahl += 40;
+		
+		return dieZahl;
+	}
 	
 	/**
 	 * prueft, ob ein Zug gueltig ist
@@ -45,8 +52,8 @@ public class Spielfeld {
 		int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
 
 		if ((felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
-				if (startPosition + anzahlSchritte > (anzahlFelder - 1))		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
-					endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - (anzahlFelder - 1));
+				if (startPosition + anzahlSchritte > add40(spieler.getEinstiegspunkt() - 1))		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
+					endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - add40(spieler.getEinstiegspunkt() - 1));
 				anzahlFelder += 16;
 		}
 
@@ -54,8 +61,6 @@ public class Spielfeld {
 				(endPosition < 40 + (spieler.getSpielernummer() * 4) + 4) && felder.get(startPosition).getBesitzer().equals(spieler) && (felder.get(endPosition) == null || !felder.get(endPosition).getBesitzer().equals(spieler)))		// gehört die Spielfigur auf dem Startfeld dem Spieler, und steht auf dem Spielfeld nicht schon eine eigene Figur?
 			return true;
 		else {
-			System.out.println((startPosition + anzahlSchritte) % 40);
-			System.out.println((startPosition + anzahlSchritte) % anzahlFelder);
 			return false;
 		}
 	}
@@ -65,16 +70,17 @@ public class Spielfeld {
 	 * @param spieler der Spieler, der den Zug ausfuehrt
 	 * @param startPosition die Position der zu ziehenden Figur
 	 * @param anzahlSchritte die Anzahl der zu ziehenden Schritte
-	 * @return ob die Figur bewegt wurde
+	 * @return die neue Position der Figur, wenn sie bewegt wurde; sonst -1
 	 */
-	public boolean bewegeFigur(Spieler spieler, int startPosition, int anzahlSchritte) {
+	public int bewegeFigur(Spieler spieler, int startPosition, int anzahlSchritte) {
 		if (istZugGueltig(spieler, startPosition, anzahlSchritte)) {
 			byte anzahlFelder = 40;
 			int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
-			
+						
 			if ((felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
-				if (startPosition + anzahlSchritte > (anzahlFelder - 1))		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
-					endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - (anzahlFelder - 1));
+				if (startPosition + anzahlSchritte > add40(spieler.getEinstiegspunkt() - 1)) {		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
+					endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - add40(spieler.getEinstiegspunkt() - 1));
+				}
 			}
 			
 			if (felder.get(endPosition) != null)
@@ -82,9 +88,9 @@ public class Spielfeld {
 			
 			felder.set(endPosition, felder.get(startPosition));
 			felder.set(startPosition, null);
-			return true;
+			return endPosition;
 		} else
-			return false;
+			return -1;
 	}
 	
 	public boolean kommRaus(Spieler spieler, Figur figur)

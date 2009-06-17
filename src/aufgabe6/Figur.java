@@ -22,11 +22,8 @@ public class Figur {
 	 * bewegt die Figur um eine bestimmte Anzahl an Schritten
 	 * @param anzahlSchritte die Anzahl der Schritte, um die die Figur bewegt werden soll
 	 */
-	public void bewege(int anzahlSchritte) {
-		this.position += anzahlSchritte;
-		
-		if (!istInZiel() && !istNaheZiel())
-			this.position %= 40;
+	public void bewege(int neuePosition) {
+		this.position = neuePosition;
 	}
 	
 	/**
@@ -57,7 +54,17 @@ public class Figur {
 	 * @return wahr, wenn die Figur in 6 Schritten das Ziel erreichen kann, sonst falsch
 	 */
 	public boolean istNaheZiel() {
-		return (this.position + 39) % 40 > ((besitzer.getEinstiegspunkt() - 6) + 39) % 40;
+		switch (besitzer.getSpielernummer()) {
+		case 0:
+			return (this.position > 39 - 6) && (this.position <= 39);
+		case 1:
+			return (this.position > 9 - 6) && (this.position <= 9);
+		case 2:
+			return (this.position > 19 - 6) && (this.position <= 19);
+		default:
+			return (this.position > 29 - 6) && (this.position <= 29);
+		}
+		//return (this.position + 39) % 40 > ((besitzer.getEinstiegspunkt() - 6) + 39) % 40;
 	}
 	
 	/**
@@ -65,7 +72,7 @@ public class Figur {
 	 * @return ob die Figur im Ziel ist
 	 */
 	public boolean istInZiel() {
-		return this.position > 39;
+		return this.position > 39 + (4 * besitzer.getSpielernummer());
 	}
 
 	/**

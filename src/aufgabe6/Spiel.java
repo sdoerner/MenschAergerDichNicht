@@ -47,8 +47,6 @@ public class Spiel extends Thread {
 				{
 					e.printStackTrace();
 				}
-				System.out.println("es geht weiter mit figur "
-						+ this.gewaehlteFigurenPosition);
 				if (this.gewaehlteFigurenPosition==-1)
 					zugErfolgreich = (gewuerfelteZahl==6)&& aktuellerSpieler.kommRaus();
 				else
@@ -82,7 +80,7 @@ public class Spiel extends Thread {
     	if (spielerPlatz == -1)
     		return -1;
     	else {
-	    	Spieler s = new Spieler(name, spielerPlatz, true);
+	    	Spieler s = new Spieler(name, spielerPlatz);
 	    	s.setServerKommunikationsThread(thread);
 	    	spieler[spielerPlatz] = s;
 	    	return spielerPlatz;
