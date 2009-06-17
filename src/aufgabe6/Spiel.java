@@ -28,8 +28,6 @@ public class Spiel extends Thread {
 	public void run() {
 		Gui.getGui().appendToTextPane("Das Spiel wurde gestartet.");
 		this.spielen();
-		if (this.abbrechen)
-			MenschMain.spielNeustarten();
 	}
 	
 	/**
@@ -113,10 +111,10 @@ public class Spiel extends Thread {
         
         while (!istSiegerGefunden) {
         	for (Spieler itSpieler : spieler) {
-        		if (itSpieler==null)
-        			continue;
         		if (this.abbrechen)
         			return;
+        		if (itSpieler==null)
+        			continue;
         		aktuellerSpieler = itSpieler;
         		
         		if (!itSpieler.istDraussen()) {				// hat der Spieler schon eine Figur auf dem Spielfeld?

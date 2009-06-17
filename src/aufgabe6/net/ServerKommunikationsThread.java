@@ -121,7 +121,7 @@ public class ServerKommunikationsThread implements Runnable
 			this.server.trenneClient(this);
 			this.abbrechen = true;
 		}
-        Gui.getGui().setStartenKnopfZustand(true);
+		Gui.getGui().setStartenKnopfZustand(!trenne);
     }
     
     

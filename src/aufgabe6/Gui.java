@@ -99,7 +99,8 @@ public class Gui {
 	}
 	
 	public void repaintSpielfeld() {
-		this.spielfeld.repaint();
+		if (this.spielfeld!=null)
+			this.spielfeld.repaint();
 	}
 	
 	private void verbinde() {

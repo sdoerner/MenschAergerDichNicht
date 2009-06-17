@@ -25,7 +25,8 @@ public class MenschMain {
     
     public static void spielNeustarten()
     {
-    	while (dasSpiel.isAlive());
+    	while (dasSpiel!=null && dasSpiel.isAlive())
+    		Thread.yield();
     	dasSpiel = new Spiel();
     }
 

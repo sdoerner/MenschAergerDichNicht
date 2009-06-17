@@ -8,6 +8,7 @@ import java.util.List;
 
 import aufgabe6.Gui;
 import aufgabe6.MenschMain;
+import aufgabe6.Spiel;
 
 public class Server
 {
@@ -98,6 +99,11 @@ public class Server
     	{
     		//Spiel-Thread auslaufen lassen
     		MenschMain.getDasSpiel().abbrechen();
+    		Spiel s = MenschMain.getDasSpiel();
+    		synchronized (s)
+			{
+    			s.notify();
+			}
     		//und neuen Thread starten
     		MenschMain.spielNeustarten();
     	}
