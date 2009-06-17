@@ -14,7 +14,6 @@ public class Spieler {
 	private int einstiegspunkt = -1;
 	private int spielerNummer = -1;
 	private String name = null;
-	private boolean isNetwork = false;
 	private ServerKommunikationsThread serverKommunikationsThread;
 	
 	/**
@@ -26,7 +25,6 @@ public class Spieler {
 		this.name = name;
 		this.spielerNummer = spielerNummer;
 		this.figuren = new Vector<Figur>(4);
-		this.isNetwork = isNetwork;
 		
 		for (int i = 0; i < 4; i++)
 			this.figuren.add(new Figur(this));
@@ -110,14 +108,18 @@ public class Spieler {
 	/**
 	 * holt die erste Figur, die noch außerhalb des Spielfelds steht, auf das Spielfeld
 	 */
-	public void kommRaus() {
-		for (Figur itFig : figuren) {
+	public boolean kommRaus() {
+		for (Figur itFig : figuren)
 			if (itFig.getPosition() == -1) {
 				if(Spielfeld.getInstance().kommRaus(this, itFig))
+				{
 					itFig.aufStart();
-				break;
+					return true;
+				}
+				else
+					break;
 			}
-		}
+		return false;
 	}
 	
 	public Vector<Figur> getFiguren() {
@@ -132,10 +134,5 @@ public class Spieler {
 	public ServerKommunikationsThread getServerKommunikationsThread()
 	{
 		return serverKommunikationsThread;
-	}
-	
-	// TODO determine if isNetwork is used at all
-	public boolean isNetwork() {
-		return isNetwork;
 	}
 }

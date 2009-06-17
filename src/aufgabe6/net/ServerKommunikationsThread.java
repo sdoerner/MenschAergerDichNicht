@@ -66,7 +66,6 @@ public class ServerKommunikationsThread implements Runnable
 						bearbeiteBewegungsAufforderung(n);
 						break;
 					}
-					
 					Gui.getGui().appendToTextPane(n.getLogMessage());
 				}
 
