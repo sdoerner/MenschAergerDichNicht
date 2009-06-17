@@ -85,7 +85,7 @@ public class Nachricht implements Serializable
     		else
     			return "Spieler " + String.valueOf(-Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER))) + " hat das Spiel verlassen.";
     	case BEWEGUNGS_AUFFORDERUNG:
-    		if (this.getValue(KEYS.FIGUREN_POSITION)!=null && (Byte.parseByte(this.getValue(KEYS.FIGUREN_POSITION))>=0))
+    		if (this.getValue(KEYS.FIGUREN_POSITION)!=null && (Integer.parseInt(this.getValue(KEYS.FIGUREN_POSITION))>=-100))
     			return "Bewegungsanfrage fuer Position " +this.getValue(KEYS.FIGUREN_POSITION);
     	default: return null;
     	}

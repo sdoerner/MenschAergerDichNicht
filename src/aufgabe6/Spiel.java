@@ -50,8 +50,10 @@ public class Spiel extends Thread {
 				}
 				System.out.println("es geht weiter mit figur "
 						+ this.gewaehlteFigurenPosition);
-				zugErfolgreich = aktuellerSpieler.ziehe(
-						this.gewaehlteFigurenPosition, gewuerfelteZahl);
+				if (this.gewaehlteFigurenPosition==-1)
+					zugErfolgreich = (gewuerfelteZahl==6)&& aktuellerSpieler.kommRaus();
+				else
+					zugErfolgreich =aktuellerSpieler.ziehe(this.gewaehlteFigurenPosition, gewuerfelteZahl);
 				if (!zugErfolgreich)
 					aktuellerSpieler.getServerKommunikationsThread()
 							.sendeZugUngueltig();

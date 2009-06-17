@@ -112,14 +112,18 @@ public class Spieler {
 	/**
 	 * holt die erste Figur, die noch außerhalb des Spielfelds steht, auf das Spielfeld
 	 */
-	public void kommRaus() {
-		for (Figur itFig : figuren) {
+	public boolean kommRaus() {
+		for (Figur itFig : figuren)
 			if (itFig.getPosition() == -1) {
 				if(Spielfeld.getInstance().kommRaus(this, itFig))
+				{
 					itFig.aufStart();
-				break;
+					return true;
+				}
+				else
+					break;
 			}
-		}
+		return false;
 	}
 	
 	public Vector<Figur> getFiguren() {

@@ -518,7 +518,7 @@ public class Gui implements GuiInterface {
 				boolean figurExistiert = false;
 				for(int positionFigur: Client.getInstance().getClientRelevanteDaten().getSpielerFiguren()[spielerNummer]){
 					if(positionFigur==-1){
-						/*switch (spielerNummer) {
+						switch (spielerNummer) {
 						case 0:
 							if ((position.x == 0 && position.y == 0)
 									|| (position.x == 1 && position.y == 0)
@@ -553,7 +553,7 @@ public class Gui implements GuiInterface {
 							break;
 						default:
 							break;
-						}*/
+						}
 					}else{
 						if(positionFigur>=0&&position.equals(this.figurenPositionen[positionFigur])){
 							figurExistiert = true;
