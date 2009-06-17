@@ -117,7 +117,8 @@ public class Spieler {
 	public void kommRaus() {
 		for (Figur itFig : figuren) {
 			if (itFig.getPosition() == -1) {
-				itFig.aufStart();
+				if(Spielfeld.getInstance().kommRaus(this, itFig))
+					itFig.aufStart();
 				break;
 			}
 		}

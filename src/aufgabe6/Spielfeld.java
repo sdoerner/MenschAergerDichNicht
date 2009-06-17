@@ -9,13 +9,14 @@ import java.util.Vector;
  */
 public class Spielfeld {
 	private static Spielfeld instance = null;
-	private Vector<Figur> felder = null;
+	private Vector<Figur> felder;
 	
 	/**
 	 * Konstruktor, der die Felder initialisiert
 	 */
 	private Spielfeld() {
 		felder = new Vector<Figur>(56);
+		felder.setSize(56);
 	}
 	
 	/**
@@ -37,17 +38,19 @@ public class Spielfeld {
 	 * @return wahr, wenn der Zug gueltig ist, sonst falsch
 	 */
 	public boolean istZugGueltig(Spieler spieler, int startPosition, int anzahlSchritte) {
+		if(felder.get(startPosition)==null)
+			return false;
 		byte anzahlFelder = 40;
 		int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
 		
-		if (felder.size() > startPosition && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
+		if ((felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
 				if (startPosition + anzahlSchritte > (anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt())		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
 					endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - ((anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt()));
 				anzahlFelder += 16;
 		}
 
-		if (felder.size() > startPosition && (startPosition >= 0) && (startPosition < anzahlFelder) && (endPosition < anzahlFelder) && (anzahlSchritte > 0) && (anzahlSchritte <= 6) &&		// liegen Start- und Endfeld auf dem Spielfeld und ist die Wuerfelzahl zwischen 1 und 6?
-				(felder.get(startPosition) != null && felder.get(startPosition).getBesitzer().equals(spieler) && (felder.get(endPosition) == null || !felder.get(endPosition).getBesitzer().equals(spieler))))		// gibt es auf dem Startfeld eine Spielfigur, gehoert sie dem Spieler, und steht auf dem Spielfeld nicht schon eine eigene Figur?
+		if ((startPosition >= 0) && (startPosition < anzahlFelder) && (endPosition < anzahlFelder) && (anzahlSchritte > 0) && (anzahlSchritte <= 6) &&		// liegen Start- und Endfeld auf dem Spielfeld und ist die Wuerfelzahl zwischen 1 und 6?
+				felder.get(startPosition).getBesitzer().equals(spieler) && (felder.get(endPosition) == null || !felder.get(endPosition).getBesitzer().equals(spieler)))		// gehört die Spielfigur auf dem Startfeld dem Spieler, und steht auf dem Spielfeld nicht schon eine eigene Figur?
 			return true;
 		else
 			return false;
@@ -70,7 +73,7 @@ public class Spielfeld {
 						endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - ((anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt()));
 			}
 			
-			if (felder.get(endPosition).getBesitzer() != null)
+			if (felder.get(endPosition) != null)
 				felder.get(endPosition).entferne();
 			
 			felder.set(endPosition, felder.get(startPosition));
@@ -78,6 +81,17 @@ public class Spielfeld {
 			return true;
 		} else
 			return false;
+	}
+	
+	public boolean kommRaus(Spieler spieler, Figur figur)
+	{
+		
+		if(felder.get(spieler.getEinstiegspunkt())!=null && felder.get(spieler.getEinstiegspunkt()).getBesitzer().equals(spieler))
+			return false;
+		if (felder.get(spieler.getEinstiegspunkt())!=null)
+			felder.get(spieler.getEinstiegspunkt()).entferne();
+		felder.set(spieler.getEinstiegspunkt(), figur);
+		return true;
 	}
 	
 	/**

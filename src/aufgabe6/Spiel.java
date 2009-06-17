@@ -51,7 +51,7 @@ public class Spiel extends Thread {
 				}
 				System.out.println("es geht weiter mit figur "
 						+ this.gewaehlteFigurenPosition);
-				zugErfolgreich = !aktuellerSpieler.ziehe(
+				zugErfolgreich = aktuellerSpieler.ziehe(
 						this.gewaehlteFigurenPosition, gewuerfelteZahl);
 				if (!zugErfolgreich)
 					aktuellerSpieler.getServerKommunikationsThread()
