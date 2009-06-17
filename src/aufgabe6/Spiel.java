@@ -6,6 +6,8 @@ public class Spiel extends Thread {
 	private static Spieler[] spieler = null;
 	private static Spieler aktuellerSpieler = null;
 	private int gewaehlteFigurenPosition;
+	private boolean abbrechen = false;//Spiel abbrechen und Server + Spiel neu starten
+									  //alle Clients sollten schon disconnected sein
 
 	public void setGewaehlteFigurenPosition(int gewaehlteFigurenPosition)
     {
@@ -17,13 +19,19 @@ public class Spiel extends Thread {
         for (int i = 0; i < 4; i++)
         	spieler[i] = null;
 	}
+    
+    public void abbrechen(){
+    	this.abbrechen = true;
+    }
 	
 	@Override
 	public void run() {
 		Gui.getGui().appendToTextPane("Das Spiel wurde gestartet.");
 		this.spielen();
+		if (this.abbrechen)
+			MenschMain.spielNeustarten();
 	}
-
+	
 	/**
 	 * wuerfelt und laesst den aktuellen Spieler ziehen (bei gewuerfelter 6: Wiederholung)
 	 */
@@ -41,6 +49,8 @@ public class Spiel extends Thread {
 					synchronized (this)
 					{
 						this.wait();
+						if (this.abbrechen)
+							return;
 					}
 				}
 				catch (InterruptedException e)
@@ -105,6 +115,8 @@ public class Spiel extends Thread {
         	for (Spieler itSpieler : spieler) {
         		if (itSpieler==null)
         			continue;
+        		if (this.abbrechen)
+        			return;
         		aktuellerSpieler = itSpieler;
         		
         		if (!itSpieler.istDraussen()) {				// hat der Spieler schon eine Figur auf dem Spielfeld?

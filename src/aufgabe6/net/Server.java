@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import aufgabe6.Gui;
+import aufgabe6.MenschMain;
 
 public class Server
 {
@@ -93,5 +94,12 @@ public class Server
     
     public void trenneClient(ServerKommunikationsThread serverKom) {
     	this.clientListe.remove(serverKom);
+    	if (this.clientListe.isEmpty())
+    	{
+    		//Spiel-Thread auslaufen lassen
+    		MenschMain.getDasSpiel().abbrechen();
+    		//und neuen Thread starten
+    		MenschMain.spielNeustarten();
+    	}
     }
 }

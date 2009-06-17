@@ -22,5 +22,11 @@ public class MenschMain {
     	if (!dasSpiel.isAlive())
     		dasSpiel = new Spiel();
     }
+    
+    public static void spielNeustarten()
+    {
+    	while (dasSpiel.isAlive());
+    	dasSpiel = new Spiel();
+    }
 
 }

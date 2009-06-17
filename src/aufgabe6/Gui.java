@@ -308,7 +308,6 @@ public class Gui {
 					trennen();
 					spielfeldContainer.removeAll();
 					spielfeldContainer.repaint();
-					toggleVerbindenKnopf();
 				}
 			}
         });
