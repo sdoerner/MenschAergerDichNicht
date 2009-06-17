@@ -16,6 +16,9 @@ public class Spielfeld {
 	 */
 	private Spielfeld() {
 		felder = new Vector<Figur>(56);
+		felder.setSize(56);
+		//for (int i = 0; i < 56; i++)
+		//	felder.add(null);
 	}
 	
 	/**
@@ -40,13 +43,15 @@ public class Spielfeld {
 		byte anzahlFelder = 40;
 		int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
 		
-		if (felder.size() > startPosition && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
+		System.out.println("felderSize: " + felder.size());
+		
+		if (felder.get(startPosition) != null && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
 				if (startPosition + anzahlSchritte > (anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt())		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
 					endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - ((anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt()));
 				anzahlFelder += 16;
 		}
 
-		if (felder.size() > startPosition && (startPosition >= 0) && (startPosition < anzahlFelder) && (endPosition < anzahlFelder) && (anzahlSchritte > 0) && (anzahlSchritte <= 6) &&		// liegen Start- und Endfeld auf dem Spielfeld und ist die Wuerfelzahl zwischen 1 und 6?
+		if ((startPosition >= 0) && (startPosition < anzahlFelder) && (endPosition < anzahlFelder) && (anzahlSchritte > 0) && (anzahlSchritte <= 6) &&		// liegen Start- und Endfeld auf dem Spielfeld und ist die Wuerfelzahl zwischen 1 und 6?
 				(felder.get(startPosition) != null && felder.get(startPosition).getBesitzer().equals(spieler) && (felder.get(endPosition) == null || !felder.get(endPosition).getBesitzer().equals(spieler))))		// gibt es auf dem Startfeld eine Spielfigur, gehoert sie dem Spieler, und steht auf dem Spielfeld nicht schon eine eigene Figur?
 			return true;
 		else
@@ -65,7 +70,7 @@ public class Spielfeld {
 			byte anzahlFelder = 40;
 			int endPosition = (startPosition + anzahlSchritte) % anzahlFelder;
 			
-			if (felder.size() > startPosition && (felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
+			if ((felder.get(startPosition).istNaheZiel() || felder.get(startPosition).istInZiel())) {		// wenn in der Naehe vom Ziel, erhoehe die Feldgroesse um die Zielfelder
 					if (startPosition + anzahlSchritte > (anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt())		// wenn durch das Wuerfeln das Ziel erreicht wird, gehe in eines der Zielfelder
 						endPosition = (anzahlFelder - 1) + (spieler.getSpielernummer() * 4) + (startPosition + anzahlSchritte - ((anzahlFelder - 1) - 10 * spieler.getEinstiegspunkt()));
 			}

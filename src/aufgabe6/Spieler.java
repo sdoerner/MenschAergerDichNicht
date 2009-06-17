@@ -51,14 +51,18 @@ public class Spieler {
 		    if (figur.getPosition()==figurnummerposition)
 		        break;
 		}
-		if (figur==null || figurnummerposition!=figur.getPosition())
+		if (figur==null || figurnummerposition!=figur.getPosition()) {
+			System.out.println("false 1");
 		    return false;
+		}
 		
 		if (Spielfeld.getInstance().bewegeFigur(this, figur.getPosition(), anzahlSchritte)) {
 			figur.bewege(anzahlSchritte);
 			return true;
-		} else
+		} else {
+			System.out.println("false 2");
 			return false;
+		}
 	}
 	
 	/**

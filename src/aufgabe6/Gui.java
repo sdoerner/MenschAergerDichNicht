@@ -507,7 +507,10 @@ public class Gui implements GuiInterface {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (Client.getInstance().getClientRelevanteDaten().istSpielGestartet() && Client.getInstance().getClientRelevanteDaten().binDran()) {
+			if (Client.getInstance().getClientRelevanteDaten().istSpielGestartet()&&
+					Client.getInstance().getClientRelevanteDaten().binDran() &&
+					Client.getInstance().getClientRelevanteDaten().isZugAusstehend()
+					) {
 				int size = this.getWidth();
 				Point position = new Point(e.getX()*11/size, e.getY()*11/size);
 				position.setLocation(position.y, position.x);
@@ -558,6 +561,7 @@ public class Gui implements GuiInterface {
 					}
 					if(figurExistiert){
 						Client.getInstance().getClientKommunikationsThread().sendeBewegungsAufforderung(positionFigur);
+						Client.getInstance().getClientRelevanteDaten().setZugAusstehend(false);
 						break;
 					}
 				}
