@@ -40,7 +40,6 @@ public class Spiel extends Thread {
 				{
 					synchronized (this)
 					{
-						System.out.println("waiting...");
 						this.wait();
 					}
 				}
@@ -52,8 +51,6 @@ public class Spiel extends Thread {
 						+ this.gewaehlteFigurenPosition);
 				zugErfolgreich = aktuellerSpieler.ziehe(
 						this.gewaehlteFigurenPosition, gewuerfelteZahl);
-				
-				System.out.println(spieler[0].getFiguren().get(0).getPosition());
 				
 				if (!zugErfolgreich)
 					aktuellerSpieler.getServerKommunikationsThread()

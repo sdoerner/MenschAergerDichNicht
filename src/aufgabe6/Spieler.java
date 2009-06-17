@@ -38,12 +38,6 @@ public class Spieler {
 	 * @return ob eine Figur bewegt werden konnte
 	 */
 	public boolean ziehe(int figurnummerposition, int anzahlSchritte) {
-//		Thread warte = new WartenThread();
-//		try {
-//			warte.join();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		Figur figur = null;
 		for (int i=0;i<figuren.size();i++)
 		{
@@ -52,7 +46,6 @@ public class Spieler {
 		        break;
 		}
 		if (figur==null || figurnummerposition!=figur.getPosition()) {
-			System.out.println("false 1");
 		    return false;
 		}
 		
@@ -60,7 +53,6 @@ public class Spieler {
 			figur.bewege(anzahlSchritte);
 			return true;
 		} else {
-			System.out.println("false 2");
 			return false;
 		}
 	}
@@ -121,7 +113,8 @@ public class Spieler {
 	public void kommRaus() {
 		for (Figur itFig : figuren) {
 			if (itFig.getPosition() == -1) {
-				itFig.aufStart();
+				if(Spielfeld.getInstance().kommRaus(this, itFig))
+					itFig.aufStart();
 				break;
 			}
 		}

@@ -78,7 +78,7 @@ public class Nachricht implements Serializable
     	case SPIELER_X_WUERFELT_Y:
     		return this.getValue(KEYS.SPIELER_NAME) + " hat eine " + this.getValue(KEYS.WUERFELZAHL) + " gewuerfelt.";
     	case UNGUELTIGER_ZUG:
-    		return "Der versuchte Zug ist ungueltig, " + this.getValue(KEYS.SPIELER_NAME) + " muss eine andere Figur waehlen";
+    		return "Der versuchte Zug ist ungueltig.";
     	case SPIELER_PLUS_MINUS:		// wird nur vom Server verwendet, Logs vom Client bezüglich dieser Nachricht werden in ClientSicht gesetzt
     		if ((this.getValue(KEYS.SPIELER_NUMMER) == null) || (Byte.parseByte(this.getValue(KEYS.SPIELER_NUMMER)) >= 0))
     			return this.getValue(KEYS.SPIELER_NAME) + " ist dem Spiel beigetreten.";
