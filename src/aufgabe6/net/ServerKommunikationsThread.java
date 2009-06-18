@@ -12,6 +12,11 @@ import aufgabe6.MenschMain;
 import aufgabe6.net.Nachricht.KEYS;
 import aufgabe6.net.Nachricht.NACHRICHTEN_TYP;
 
+/**
+ * Regelt den Nachrichtenaustausch auf Serverseite. Steht zu genau einem Client in Verbindung.
+ * @author sdoerner
+ *
+ */
 public class ServerKommunikationsThread implements Runnable
 {
     private Socket socket;
@@ -22,14 +27,19 @@ public class ServerKommunikationsThread implements Runnable
     private ObjectOutputStream oos;
     private boolean abbrechen;
     
+    /**
+     * Erstellt einen neuen Kommunikationthread.
+     * @param socket Verbundener Socket, ueber den kommuniziert werden soll.
+     * @param server Luke, ich bin dein Vater!
+     */
     public ServerKommunikationsThread(Socket socket, Server server)
     {
+    	//uebergebene Werte uebernehmen
         this.abbrechen = false;
         this.socket = socket;
         this.server = server;
         try{
-	//        socket.setKeepAlive(true);
-	        
+        	//Streams auf die Sockets legen
 	        is=this.socket.getInputStream();
 	        os=this.socket.getOutputStream();
 	        oos = new ObjectOutputStream(os);
@@ -43,20 +53,24 @@ public class ServerKommunikationsThread implements Runnable
     
     //--------------------------  Empfangs-Teil -------------------------------------//
 
+    /*
+     * Wartet auf ankommende Nachrichten und verarbeitet diese.
+     */
     @Override
     public void run()
     {
-        //String s;
      //dauerhaft auf Nachrichten vom Client warten
         while (!this.abbrechen && socket.isConnected())
         {
             try
             {
-                if (is.available() > 0)
+                if (is.available() > 0)//wenn ein Paket ankommt...
                 {
                 	if (ois==null)
                 		ois = new ObjectInputStream(is);
+                	//Nachricht extrahieren...
                     Nachricht n = (Nachricht) ois.readObject();
+                    //und entsprechend verarbeiten
 					switch (n.getNachrichtenTyp())
 					{
 					case SPIELER_PLUS_MINUS:
@@ -66,7 +80,6 @@ public class ServerKommunikationsThread implements Runnable
 						bearbeiteBewegungsAufforderung(n);
 						break;
 					}
-//					Gui.getGui().appendToTextPane(n.getLogMessage());
 				}
 
             } catch (Exception e)
@@ -75,6 +88,7 @@ public class ServerKommunikationsThread implements Runnable
                 e.printStackTrace();
             }
         }
+        //beim Abbrechen alle Verbindungen schliessen
     		try
     		{
     			ois.close();
@@ -85,43 +99,57 @@ public class ServerKommunikationsThread implements Runnable
     		}
     }
     
-    private void bearbeiteBewegungsAufforderung(Nachricht n)
+    /**
+     * Eine eingehende Bewegungsaufforderungsnachricht verarbeiten.
+     * @param nachricht Die eingehende Nachricht.
+     */
+    private void bearbeiteBewegungsAufforderung(Nachricht nachricht)
     {
-        int position = Integer.parseInt(n.getValue(KEYS.FIGUREN_POSITION));
+    	//welche Figur soll bewegt werden?
+        int position = Integer.parseInt(nachricht.getValue(KEYS.FIGUREN_POSITION));
+        //gewaehlte Figurenposition an das Spiel uebergeben...
         MenschMain.getDasSpiel().setGewaehlteFigurenPosition(position);
+        //und Thread aufwecken
         synchronized(MenschMain.getDasSpiel())
         {
         	MenschMain.getDasSpiel().notify();
         }
     }
     
-    private void bearbeiteSpielerPlusMinus(Nachricht n)
+    /**
+     * Paket fuer neu erstellte und beendete Verbindungen verarbeiten.
+     * @param nachricht Die eingegangene Nachricht.
+     */
+    private void bearbeiteSpielerPlusMinus(Nachricht nachricht)
     {
         Nachricht nOut = new Nachricht(server.getServerName(), NACHRICHTEN_TYP.SPIELER_PLUS_MINUS);
         boolean trenne = false;
         
-    	if ((n.getValue(KEYS.SPIELER_NUMMER) == null) || (Byte.parseByte(n.getValue(KEYS.SPIELER_NUMMER)) > 0)) {
-	    	int index = MenschMain.getDasSpiel().verbindeSpieler(n.getValue(KEYS.SPIELER_NAME),this);
+    	if ((nachricht.getValue(KEYS.SPIELER_NUMMER) == null) || (Byte.parseByte(nachricht.getValue(KEYS.SPIELER_NUMMER)) > 0)) {
+    		//neu verbundener Spieler
+	    	int index = MenschMain.getDasSpiel().verbindeSpieler(nachricht.getValue(KEYS.SPIELER_NAME),this);
 	    	
 	        nOut.setValue(KEYS.SPIELER_NUMMER, ""+ (index+1));
-	        nOut.setValue(KEYS.SPIELER_NAME, "" + n.getValue(KEYS.SPIELER_NAME));
+	        nOut.setValue(KEYS.SPIELER_NAME, "" + nachricht.getValue(KEYS.SPIELER_NAME));
 	        nOut.setValue(KEYS.FIGUREN, "" + MenschMain.getDasSpiel().toClientSicht());
     	} else {
-    		byte spielerNummer = Byte.parseByte(n.getValue(KEYS.SPIELER_NUMMER));
+    		//Spieler, der sich von uns trennen moechte :-(
+    		byte spielerNummer = Byte.parseByte(nachricht.getValue(KEYS.SPIELER_NUMMER));
     		
     		MenschMain.getDasSpiel().trenneSpieler((byte)-(spielerNummer + 1));
-	        nOut.setValue(KEYS.SPIELER_NUMMER, n.getValue(KEYS.SPIELER_NUMMER));
-	        nOut.setValue(KEYS.SPIELER_NAME, n.getValue(KEYS.SPIELER_NAME));
+	        nOut.setValue(KEYS.SPIELER_NUMMER, nachricht.getValue(KEYS.SPIELER_NUMMER));
+	        nOut.setValue(KEYS.SPIELER_NAME, nachricht.getValue(KEYS.SPIELER_NAME));
 	        trenne = true;
     	}
     	
+    	//Andere Clients ueber den Familienzuwachs oder die Beerdigung informieren.
         this.server.sendeNachrichtAnAlleClients(nOut);
 		if (trenne)
 		{
 			this.server.trenneClient(this);
 			this.abbrechen = true;
-			if (MenschMain.getDasSpiel().aktuelleSpielerNummer()==-Byte.parseByte(n.getValue(KEYS.SPIELER_NUMMER))-1){
-				//wenn der aktuelle Spieler disconnected, brauchen wir nicht mehr auf sein Würfelergebnis warten
+			if (MenschMain.getDasSpiel().aktuelleSpielerNummer()==-Byte.parseByte(nachricht.getValue(KEYS.SPIELER_NUMMER))-1){
+				//Wenn der aktuelle Spieler disconnected, müssen wir nicht mehr auf sein Würfelergebnis warten.
 				MenschMain.getDasSpiel().setGewaehlteFigurenPosition(-2);
 				synchronized (MenschMain.getDasSpiel())
 				{
@@ -129,16 +157,21 @@ public class ServerKommunikationsThread implements Runnable
 				}
 			}
 		}
-		Gui.getGui().setStartenKnopfZustand(!trenne);
+		if (!trenne)
+			Gui.getGui().setStartenKnopfZustand(true);
     }
     
     
     //---------------------------------  sende-Teil ------------------------------------//
     
-    public void sendeNachricht(Nachricht n)
+    /**
+     * Sendet eine vorbereitete Nachricht an den verbundenen Client.
+     * @param nachricht Die zu sendende Nachricht.
+     */
+    public void sendeNachricht(Nachricht nachricht)
     {
         try{
-	        oos.writeObject(n);
+	        oos.writeObject(nachricht);
 	        oos.flush();
         }
         catch (IOException e){
@@ -146,12 +179,21 @@ public class ServerKommunikationsThread implements Runnable
         }
     }
     
+    /**
+     * Informiere den Client, dass der gewaehlte Zug ungueltig ist.
+     */
     public void sendeZugUngueltig()
     {
     		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.UNGUELTIGER_ZUG);
             sendeNachricht(n);
     }
     
+    /**
+     * Sende den aktuellen Spielstatus.
+     * @param spielerName Name des Spielers.
+     * @param spielerIndex Index(Nummer) des Spielers.
+     * @param wuerfelZahl Die gewuerfelte Augenzahl.
+     */
     public void sendeWuerfelZahl(String spielerName, int spielerIndex, int wuerfelZahl) {
 		Nachricht wuerfelNachricht = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.SPIELER_X_WUERFELT_Y);
 		wuerfelNachricht.setValue(KEYS.SPIELER_NAME, spielerName);
@@ -161,6 +203,10 @@ public class ServerKommunikationsThread implements Runnable
 		this.server.sendeNachrichtAnAlleClients(wuerfelNachricht);
     }
 
+    /**
+     * Informiere den Client, dass ein Spieler gewonnen hat.
+     * @param spielerName Name des Gewinners.
+     */
     public void sendeSpielerHatGewonnen(String spielerName)
     {
 		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.SPIELER_X_HAT_GEWONNEN);
