@@ -30,6 +30,11 @@ public class Spiel extends Thread {
 		this.spielen();
 	}
 	
+	public int aktuelleSpielerNummer()
+	{
+		return aktuellerSpieler.getSpielernummer();
+	}
+	
 	/**
 	 * wuerfelt und laesst den aktuellen Spieler ziehen (bei gewuerfelter 6: Wiederholung)
 	 */
@@ -55,6 +60,8 @@ public class Spiel extends Thread {
 				{
 					e.printStackTrace();
 				}
+				if (this.gewaehlteFigurenPosition==-2)//aktueller Spieler hat die Verbindung beendet
+					return;
 				if (this.gewaehlteFigurenPosition==-1)
 					zugErfolgreich = (gewuerfelteZahl==6)&& aktuellerSpieler.kommRaus();
 				else

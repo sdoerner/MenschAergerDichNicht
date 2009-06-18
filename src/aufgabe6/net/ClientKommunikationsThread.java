@@ -45,6 +45,10 @@ public class ClientKommunikationsThread implements Runnable
         n.setValue(KEYS.SPIELER_NAME, Gui.getGui().getSpielerNamensFeldInhalt());
         this.sendeNachricht(n);
     }
+    
+    public void abbrechen(){
+    	this.abbrechen = true;
+    }
 
     /**
      * wartet auf Nachrichten und liest sie ein
@@ -120,13 +124,8 @@ public class ClientKommunikationsThread implements Runnable
     private void verarbeiteNachricht(Nachricht theNachricht) {
     	switch (theNachricht.getNachrichtenTyp()) {
     	case SPIELER_PLUS_MINUS:
-    		if (theNachricht.getValue(KEYS.FIGUREN)!=null)
-    		{
     			Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);
     			Gui.getGui().repaintSpielfeld();
-    		}
-    		else
-    			this.abbrechen = true;
     		break;
     	case SPIELER_X_WUERFELT_Y:
     		Client.getInstance().getClientRelevanteDaten().verarbeiteNachricht(theNachricht);

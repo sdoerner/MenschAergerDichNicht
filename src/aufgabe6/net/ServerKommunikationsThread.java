@@ -66,7 +66,7 @@ public class ServerKommunikationsThread implements Runnable
 						bearbeiteBewegungsAufforderung(n);
 						break;
 					}
-					Gui.getGui().appendToTextPane(n.getLogMessage());
+//					Gui.getGui().appendToTextPane(n.getLogMessage());
 				}
 
             } catch (Exception e)
@@ -120,6 +120,14 @@ public class ServerKommunikationsThread implements Runnable
 		{
 			this.server.trenneClient(this);
 			this.abbrechen = true;
+			if (MenschMain.getDasSpiel().aktuelleSpielerNummer()==-Byte.parseByte(n.getValue(KEYS.SPIELER_NUMMER))-1){
+				//wenn der aktuelle Spieler disconnected, brauchen wir nicht mehr auf sein Würfelergebnis warten
+				MenschMain.getDasSpiel().setGewaehlteFigurenPosition(-2);
+				synchronized (MenschMain.getDasSpiel())
+				{
+					MenschMain.getDasSpiel().notify();
+				}
+			}
 		}
 		Gui.getGui().setStartenKnopfZustand(!trenne);
     }

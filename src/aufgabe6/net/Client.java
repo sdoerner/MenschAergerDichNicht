@@ -32,6 +32,7 @@ public class Client {
 	 */
     public void loescheClientRelevanteDaten() {
     	this.clientRelevanteDaten = new ClientSicht();
+    	this.clientKommunikationsThread.abbrechen();
     	this.clientKommunikationsThread = null;
     }
     
