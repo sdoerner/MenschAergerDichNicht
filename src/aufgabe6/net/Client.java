@@ -105,31 +105,7 @@ public class Client
 	{
 		this.name = name;
 		Socket so;
-		try
-		{
-			InetSocketAddress inet = new InetSocketAddress(ipAdresse, 9999);
-			so = new Socket();
-			//wir wollen nicht zu lange auf nicht-vorhandene Server warten
-			so.setSoTimeout(1000);
-			so.connect(inet);
-			initialisiereKommunikationsThread(so);
-		}
-		catch (UnknownHostException e1)
-		{
-			JOptionPane.showMessageDialog(null,
-					"Fehler: Der angegebene Server ist nicht erreichbar",
-					"Mensch aergere dich nicht : Fehler",
-					JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
-		catch (IOException e1)
-		{
-			JOptionPane.showMessageDialog(null,
-					"Fehler: Der Server ist nicht mehr erreichbar",
-					"Mensch aergere dich nicht : Fehler",
-					JOptionPane.ERROR_MESSAGE);
-			return false;
-		}
+		// TODO: Punkt 1 -> mit dem angegebenen Server verbinden
 		return true;
 	}
 

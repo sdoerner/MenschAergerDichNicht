@@ -48,12 +48,7 @@ public class Server
 	 */
 	private void initialisiereNeuenClientThread(Socket socket)
 	{
-		// KommunikationsThread erstellen, in die Liste aufnehmen und starten.
-		ServerKommunikationsThread serverKom = new ServerKommunikationsThread(
-				socket, this);
-		clientListe.add(serverKom);
-		Thread thread = new Thread(serverKom);
-		thread.start();
+		// TODO: Punkt 1 -> KommunikationsThread erstellen, in die Liste aufnehmen und starten.
 	}
 
 	/**
@@ -97,22 +92,13 @@ public class Server
 		{
 			public void run()
 			{
-				try
-				{
-					Gui.getGui().appendToTextPane("Server wurde erstellt.");
-					//wir lauschen dauerhaft.
-					while (!lauschenAbbrechen)
-					{
-						//neu verbundene Clients werden abgefertigt
-						Socket socket = lauschSocket.accept();
-						if (socket != null)
-							initialisiereNeuenClientThread(socket);
-					}
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-				}
+				Gui.getGui().appendToTextPane("Server wurde erstellt.");
+				
+				// TODO: Punkt 1 -> Dauerhaft auf neue Daten Warten, 
+				//						bis lauschenAbbrechen gesetzt wird
+				//			Tipp: Für jede akzeptierte Verbindung muss ein neuer 
+				//				  ClientThread initialisiert werden
+
 				//bei "abbrechen" Verbindung beenden
 				try
 				{
