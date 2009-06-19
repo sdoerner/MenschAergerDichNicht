@@ -192,13 +192,7 @@ public class ClientKommunikationsThread implements Runnable
 					true);
 			Gui.getGui().appendToTextPane(nachricht.getLogMessage());
 			break;
-		case SPIELER_X_HAT_GEWONNEN:
-			Gui.getGui().appendToTextPane(nachricht.getLogMessage());
-			JOptionPane.showMessageDialog(null, nachricht.getLogMessage(),
-					"Mensch aergere dich nicht : Spielende",
-					JOptionPane.INFORMATION_MESSAGE);
-			this.sendeTrennen();
-			break;
+		// TODO: Punkt 2 -> SPIELER_X_HAT_GEWONNEN verarbeiten
 		}
 	}
 }

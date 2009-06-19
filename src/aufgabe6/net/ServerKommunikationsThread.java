@@ -209,8 +209,6 @@ public class ServerKommunikationsThread implements Runnable
      */
     public void sendeSpielerHatGewonnen(String spielerName)
     {
-		Nachricht n = new Nachricht(this.server.getServerName(), NACHRICHTEN_TYP.SPIELER_X_HAT_GEWONNEN);
-		n.setValue(KEYS.SPIELER_NAME, spielerName);
-		this.server.sendeNachrichtAnAlleClients(n);
+    	// TODO: Punkt 2 -> Passende Nachricht erstellen und abschicken
     }
 }

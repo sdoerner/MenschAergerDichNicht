@@ -166,11 +166,8 @@ public class Spiel extends Thread {
 	        	}
 	        }
         }
-        //benachrichtige alle Clients ueber das Spielende 
-        String nameGewinner = aktuellerSpieler.getName();
-        for (Spieler itSpieler: spieler)
-        	if (itSpieler != null)
-        		itSpieler.getServerKommunikationsThread().sendeSpielerHatGewonnen(nameGewinner);
+        // TODO: Punkte2 -> Den Clients mitteilen, wer gewonnen hat bzw.
+        //		eine entsprechende Nachricht senden
     }
     
     /**

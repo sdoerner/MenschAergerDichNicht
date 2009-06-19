@@ -84,8 +84,7 @@ public class Nachricht implements Serializable
      */
     public String getLogMessage() {
     	switch (this.nachrichtenTyp) {
-    	case SPIELER_X_HAT_GEWONNEN:
-    		return this.getValue(KEYS.SPIELER_NAME) + " hat gewonnen!";
+    	//TODO: Punkt 2 -> Fehlende Nachricht (s.o.) einfügen
     	case SPIELER_X_WUERFELT_Y:
     		return this.getValue(KEYS.SPIELER_NAME) + " hat eine " + this.getValue(KEYS.WUERFELZAHL) + " gewuerfelt.";
     	case UNGUELTIGER_ZUG:
