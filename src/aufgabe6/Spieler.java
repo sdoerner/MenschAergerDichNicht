@@ -94,7 +94,7 @@ public class Spieler {
 	}
 	
 	/**
-	 * gibt an, ob ein Spieler schon Figuren auf dem Brett hat
+	 * gibt an, ob ein Spieler schon/noch Figuren auf dem Brett hat
 	 * @return wahr, wenn dieser Spieler Figuren auf dem Brett hat
 	 */
 	public boolean istDraussen() {
@@ -123,17 +123,43 @@ public class Spieler {
 		return false;
 	}
 	
+	/**
+	 * getter fuer die Figuren
+	 * @return die Figuren des Spielers
+	 */
 	public Vector<Figur> getFiguren() {
 		return figuren;
 	}
 
+	/**
+	 * setter fuer den ServerKommunikationsThread des Spielers
+	 * @param serverKommunikationsThread des Spielers neuer ServerKommunikationsThread
+	 */
 	public void setServerKommunikationsThread(ServerKommunikationsThread serverKommunikationsThread)
 	{
 		this.serverKommunikationsThread = serverKommunikationsThread;
 	}
 
+	/**
+	 * getter fuer den ServerKommunikationThread des Spielers
+	 * @return des Spielers ServerKommunikationsThread
+	 */
 	public ServerKommunikationsThread getServerKommunikationsThread()
 	{
 		return serverKommunikationsThread;
 	}
+	
+    /**
+     * gibt an, ob dieser Spieler Figuren hat, die er setzen kann
+     * @param anzahlSchritte die Anzahl der zurueckzulegenden Schritte (= gewuerfelte Zahl)
+     * @return true, wenn dieser Spieler Figuren hat, die er mit den gegebenen Schritten setzen kann
+     */
+    public boolean hatZugMoeglichkeit(byte anzahlSchritte) {
+    	for (Figur itFigur : this.figuren) {
+    		if (((anzahlSchritte == 6) && (Spielfeld.getInstance().kannRausKommen(itFigur.getBesitzer(), itFigur))) || ((itFigur.getPosition() > -1) && (Spielfeld.getInstance().istZugGueltig(this, itFigur.getPosition(), anzahlSchritte))))
+    			return true;
+    	}
+    	
+    	return false;
+    }
 }

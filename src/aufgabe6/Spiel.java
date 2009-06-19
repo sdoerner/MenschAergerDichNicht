@@ -2,51 +2,88 @@ package aufgabe6;
 
 import aufgabe6.net.ServerKommunikationsThread;
 
+/**
+ * Der Spiel-Thread, das "Herz" des Programms.
+ * Läuft nur auf dem Server; was passiert ist, wird an alle Clients gebroadcastet.
+ *
+ */
 public class Spiel extends Thread {
 	private static Spieler[] spieler = null;
 	private static Spieler aktuellerSpieler = null;
 	private int gewaehlteFigurenPosition;
+	private boolean abbrechen = false;//Spiel abbrechen und Server + Spiel neu starten
+									  //alle Clients sollten schon disconnected sein
 
+	/**
+	 * setzt die naechste zu setzende Figurenposition.
+	 * ist von außen (Reaktion auf Servernachricht) aufzurufen
+	 */
 	public void setGewaehlteFigurenPosition(int gewaehlteFigurenPosition)
     {
         this.gewaehlteFigurenPosition = gewaehlteFigurenPosition;
     }
 	
+	/**
+	 * Konstruktor, initialisiert die Spieler mit Null
+	 */
     public Spiel() {
         spieler = new Spieler[4];
         for (int i = 0; i < 4; i++)
         	spieler[i] = null;
 	}
+    
+    /**
+     * bricht das Spiel ab
+     */
+    public void abbrechen(){
+    	this.abbrechen = true;
+    }
 	
+    /**
+     * startet das Spiel
+     */
 	@Override
 	public void run() {
 		Gui.getGui().appendToTextPane("Das Spiel wurde gestartet.");
 		this.spielen();
 	}
-
+	
+	/**
+	 * ermittelt die Spielernummer des aktuellen Spielers
+	 * @return die Nummer des aktuellen Spielers
+	 */
+	public int aktuelleSpielerNummer()
+	{
+		return aktuellerSpieler.getSpielernummer();
+	}
+	
 	/**
 	 * wuerfelt und laesst den aktuellen Spieler ziehen (bei gewuerfelter 6: Wiederholung)
 	 */
 	private void wuerfelnUndZiehen() {
-		int gewuerfelteZahl;
+		byte gewuerfelteZahl;
 		
 		do {
 			gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
 			aktuellerSpieler.getServerKommunikationsThread().sendeWuerfelZahl(aktuellerSpieler.getName(), aktuellerSpieler.getSpielernummer(), gewuerfelteZahl);
 			boolean zugErfolgreich = false;
-			while (!zugErfolgreich)
+			while (!zugErfolgreich && aktuellerSpieler.hatZugMoeglichkeit(gewuerfelteZahl))
 			{
 				try
 				{
 					synchronized (this)
 					{
 						this.wait();
+						if (this.abbrechen)
+							return;
 					}
 				}
 				catch (InterruptedException e)
 				{
 					e.printStackTrace();
 				}
+				if (this.gewaehlteFigurenPosition==-2)//aktueller Spieler hat die Verbindung beendet
+					return;
 				if (this.gewaehlteFigurenPosition==-1)
 					zugErfolgreich = (gewuerfelteZahl==6)&& aktuellerSpieler.kommRaus();
 				else
@@ -103,6 +140,8 @@ public class Spiel extends Thread {
         
         while (!istSiegerGefunden) {
         	for (Spieler itSpieler : spieler) {
+        		if (this.abbrechen)
+        			return;
         		if (itSpieler==null)
         			continue;
         		aktuellerSpieler = itSpieler;
@@ -110,7 +149,6 @@ public class Spiel extends Thread {
         		if (!itSpieler.istDraussen()) {				// hat der Spieler schon eine Figur auf dem Spielfeld?
         			for (int i = 0; i < 3; i++) {			// drei mal wuerfeln, um evt. raus zu kommen
         				int gewuerfelteZahl = Spielfeld.getInstance().wuerfeln();
-        			
         				Gui.getGui().appendToTextPane(aktuellerSpieler.getName() + " hat eine " + gewuerfelteZahl + " gewuerfelt.");
         				
         				if (gewuerfelteZahl == 6) {
@@ -139,7 +177,7 @@ public class Spiel extends Thread {
      * gibt die aktuellen Positionen der Spielfiguren als ClientSicht zurueck
      * @return die aktuellen Spielfigurpositionen als ClientSicht
      */
-    public ClientSicht toClientSicht() {
+    public ClientSicht zuClientSicht() {
     	return new ClientSicht(spieler);
     }
 }

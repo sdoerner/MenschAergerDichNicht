@@ -139,31 +139,59 @@ public class ClientSicht implements Serializable {
 		return retArr;
 	}
 	
+	/**
+	 * getter fuer die Figuren aller Spieler
+	 * @return die Figuren aller Spieler
+	 */
 	public int[][] getSpielerFiguren() {
 		return spielerFiguren;
 	}
 	
+	/**
+	 * getter fuer die Spielernummer
+	 * @return die Spielernummer des Clients
+	 */
 	public byte getMeineNummer() {
 		return meineNummer;
 	}
 	
+	/**
+	 * getter fuer den aktuellen Spieler
+	 * @return die Nummer des aktuellen Spielers
+	 */
 	public byte getAktuellerSpieler() {
 		return this.aktuellerSpieler;
 	}
 	
+	/**
+	 * getter fuer das letzte Wuerfelergebnis
+	 * @return die zuletzt gewuerfelte Zahl
+	 */
 	public byte letzteWuerfelZahl() {
 		return this.letzteWuerfelZahl;
 	}
 	
+	/**
+	 * gibt an, ob der Client an der Reihe ist
+	 * @return true, wenn man selbst der aktuelle Spieler ist, sonst false
+	 */
 	public boolean binDran() {
 		return this.aktuellerSpieler == this.meineNummer;
 	}
 
+	/**
+	 * setzt, ob von diesem Client ein Zug erwartet wird
+	 * @param zugAusstehend ob ein Zug erwartet wird
+	 */
 	public void setZugAusstehend(boolean zugAusstehend)
 	{
 		this.zugAusstehend = zugAusstehend;
 	}
 
+	/**
+	 * erfragt, ob von diesem Client ein Zug erwartet wird
+	 * @return true, wenn ein Zug erwartet wird, sonst false
+	 */
 	public boolean isZugAusstehend()
 	{
 		return zugAusstehend;

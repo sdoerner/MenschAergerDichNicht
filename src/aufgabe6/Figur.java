@@ -64,7 +64,6 @@ public class Figur {
 		default:
 			return (this.position > 29 - 6) && (this.position <= 29);
 		}
-		//return (this.position + 39) % 40 > ((besitzer.getEinstiegspunkt() - 6) + 39) % 40;
 	}
 	
 	/**

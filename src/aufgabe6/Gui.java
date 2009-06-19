@@ -99,10 +99,8 @@ public class Gui {
 	}
 	
 	public void repaintSpielfeld() {
-		if (this.spielfeld != null)
+		if (this.spielfeld!=null)
 			this.spielfeld.repaint();
-		else
-			System.out.println("false");
 	}
 	
 	private void verbinde() {
@@ -311,7 +309,6 @@ public class Gui {
 					trennen();
 					spielfeldContainer.removeAll();
 					spielfeldContainer.repaint();
-					toggleVerbindenKnopf();
 				}
 			}
         });

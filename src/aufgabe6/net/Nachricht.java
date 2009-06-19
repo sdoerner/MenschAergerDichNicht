@@ -4,8 +4,7 @@ import java.io.Serializable;
 import java.util.TreeMap;
 
 /**
- * Abstrakte Basisklasse fuer alle Nachrichten, d.h. Inhalte von gesendeten
- * Paketen.
+ *  Repraesentiert den Inhalt von gesendeten Paketen.
  * 
  * @author sdoerner
  * 
@@ -14,6 +13,7 @@ public class Nachricht implements Serializable
 {
     private static final long serialVersionUID = -6825244032568593070L;
 
+    //gueltige Schluesselwerte fuer uebertragbare Daten.
     public static enum KEYS
     {
         SPIELER_NAME,
@@ -24,10 +24,11 @@ public class Nachricht implements Serializable
         GEKLICKTES_FELD
     }
     
+    //unterschiedliche Arten von Nachrichten
     public static enum NACHRICHTEN_TYP
     {
         SPIELER_PLUS_MINUS,		// Client <-> Server
-        SPIELER_X_WUERFELT_Y,	// Client <- Server inklusive komplette Figurenuebermittlung und evt. wer gewonnen hat
+        SPIELER_X_WUERFELT_Y,	// Client <- Server inklusive kompletter Figurenuebermittlung
         BEWEGUNGS_AUFFORDERUNG,	// Client -> Server
         UNGUELTIGER_ZUG,		// Client <- Server
         SPIELER_X_HAT_GEWONNEN	// Client <- Server
@@ -37,6 +38,12 @@ public class Nachricht implements Serializable
     private TreeMap<KEYS, String> data;
     private NACHRICHTEN_TYP nachrichtenTyp;
 
+    /**
+     * Erzeugt eine neue Nachricht.
+     * @param sender Sender der Nachricht.
+     * @param typ Art der Nachricht.
+     * @throws NullPointerException Wenn der Sender null ist.
+     */
     public Nachricht(String sender, NACHRICHTEN_TYP typ) throws NullPointerException
     {
         if (sender==null)
@@ -71,6 +78,10 @@ public class Nachricht implements Serializable
         return nachrichtenTyp;
     }
     
+    /**
+     * Liefert die Lognachricht fuer das Log-Fenster.
+     * @return Die Lognachricht.
+     */
     public String getLogMessage() {
     	switch (this.nachrichtenTyp) {
     	case SPIELER_X_HAT_GEWONNEN:

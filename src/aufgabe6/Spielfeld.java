@@ -30,6 +30,11 @@ public class Spielfeld {
 		return instance;
 	}
 
+	/**
+	 * rechnet solange 40 auf eine Zahl, bis sie mindestens 0 ist
+	 * @param dieZahl die zu erhoehende Zahl
+	 * @return die erhoehte Zahl
+	 */
 	private int add40(int dieZahl) {
 		while (dieZahl < 0)
 			dieZahl += 40;
@@ -93,10 +98,23 @@ public class Spielfeld {
 			return -1;
 	}
 	
+	public boolean kannRausKommen(Spieler spieler, Figur figur) {
+		if((figur.getPosition() != -1) || (felder.get(spieler.getEinstiegspunkt())!=null && felder.get(spieler.getEinstiegspunkt()).getBesitzer().equals(spieler)))
+			return false;
+		else
+			return true;
+	}
+	
+	/**
+	 * versucht, eine Spielfigur aus dem Startbereich ins Spiel zhu holen.
+	 * schlägt gegnerische Figuren, falls sie sich auf dem Feld befinden.
+	 * @param spieler der Spieler, dessen Figur heraus kommen soll
+	 * @param figur die herauszuholende Figur
+	 * @return ob die Figur erfolgreich heraus geholt werden konnte
+	 */
 	public boolean kommRaus(Spieler spieler, Figur figur)
 	{
-		
-		if(felder.get(spieler.getEinstiegspunkt())!=null && felder.get(spieler.getEinstiegspunkt()).getBesitzer().equals(spieler))
+		if(!kannRausKommen(spieler, figur))
 			return false;
 		if (felder.get(spieler.getEinstiegspunkt())!=null)
 			felder.get(spieler.getEinstiegspunkt()).entferne();
@@ -108,10 +126,14 @@ public class Spielfeld {
 	 * wuerfelt eine Zahl zwischen 1 und 6
 	 * @return die gewuerfelte Zahl zwischen 1 und 6
 	 */
-	public int wuerfeln() {
-		return (int)(Math.random() * 6) + 1;
+	public byte wuerfeln() {
+		return (byte)(Math.random() * 6 + 1);
 	}
 	
+	/**
+	 * gibt die Felder des Spielfelds, die eventuell mit Figuren besetzt sind, zurueck
+	 * @return die Felder/Figuren des Spielfelds
+	 */
 	public Vector<Figur> getWahrscheinlichFiguren(){
 		return this.felder;
 	}
